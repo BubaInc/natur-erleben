@@ -15,9 +15,6 @@ export default function Lobby() {
       const data = snapshot.val()
       setPlayerNames(data)
     })
-    window.onbeforeunload = () => {
-      disconnect(window.localStorage.getItem("name")!, id)
-    }
   }, [])
   return (
     <Container maxWidth="sm">

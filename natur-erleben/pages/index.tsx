@@ -9,7 +9,12 @@ import type { NextPage } from "next"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import SpinnerButton from "../components/SpinnerButton"
-import { createGame, joinGame } from "../Firebase"
+import {
+  createGame,
+  isGameIdValid,
+  isPlayerNameAvailable,
+  joinGame,
+} from "../Firebase"
 
 const Home: NextPage = () => {
   const [playerName, setPlayerName] = useState("")
@@ -17,6 +22,8 @@ const Home: NextPage = () => {
   const [step, setStep] = useState(0)
   const [createMode, setCreateMode] = useState(false)
   const router = useRouter()
+  const [invalidGameId, setInvalidGameId] = useState(false)
+  const [invalidPlayerName, setInvalidPlayerName] = useState(false)
 
   return (
     <Container maxWidth="sm">
@@ -56,6 +63,7 @@ const Home: NextPage = () => {
                 label="Name"
                 fullWidth
                 onChange={(e) => setPlayerName(e.target.value)}
+                error={invalidPlayerName}
               ></TextField>
             </Grid>
             {!createMode ? (
@@ -64,6 +72,7 @@ const Home: NextPage = () => {
                   label="Spiel ID"
                   fullWidth
                   onChange={(e) => setGameId(e.target.value)}
+                  error={invalidGameId}
                 ></TextField>
               </Grid>
             ) : (
@@ -77,16 +86,26 @@ const Home: NextPage = () => {
                     const id = await createGame(playerName)
                     router.push("/lobby?id=" + id + "&host=true")
                     window.localStorage.setItem("name", playerName)
+                    window.localStorage.setItem("id", id)
                   } else {
+                    if (!(await isGameIdValid(gameId))) {
+                      setInvalidGameId(true)
+                      return
+                    }
+                    if (!(await isPlayerNameAvailable(playerName, gameId))) {
+                      setInvalidPlayerName(true)
+                      return
+                    }
                     await joinGame(playerName, gameId)
                     router.push("/lobby?id=" + gameId + "&host=false")
                     window.localStorage.setItem("name", playerName)
+                    window.localStorage.setItem("id", gameId)
                   }
                 }}
                 disabled={
                   createMode
                     ? playerName == ""
-                    : playerName == "" && gameId == ""
+                    : playerName == "" || gameId == ""
                 }
               >
                 Weiter

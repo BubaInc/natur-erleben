@@ -80,3 +80,18 @@ export const disconnect = async (playerName: string, gameId: string) => {
     await set(playersRef, data)
   }
 }
+
+export const isPlayerNameAvailable = async (
+  playerName: string,
+  gameId: string
+) => {
+  const players = (
+    await get(ref(database, "games/" + gameId + "/players"))
+  ).val()
+  return !players.includes(playerName)
+}
+
+export const isGameIdValid = async (gameId: string) => {
+  const snapshot = await get(ref(database, "games/" + gameId))
+  return snapshot.exists()
+}
