@@ -25,8 +25,8 @@ export default function Lobby() {
         ID: {id}
       </Typography>
       <List>
-        {playerNames.map((name) => {
-          return <ListItemText>{name}</ListItemText>
+        {playerNames.map((name, i) => {
+          return <ListItemText key={i}>{name}</ListItemText>
         })}
       </List>
     </Container>
