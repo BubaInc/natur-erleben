@@ -6,20 +6,39 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import RenderIf from "../components/RenderIf"
 import SpinnerButton from "../components/SpinnerButton"
-import { disconnect, getPlayerList, watchPlayerList } from "../Firebase"
+import {
+  changeStage,
+  disconnect,
+  getPlayerList,
+  watchPlayerList,
+  watchStage,
+} from "../Firebase"
 
 export default function Lobby() {
   const router = useRouter()
   const id = router.query.id as string
-  const isHost = router.query.host as string
+  const isHost = (router.query.host as string) == "true"
   const [playerNames, setPlayerNames] = useState<string[]>([])
   useEffect(() => {
-    getPlayerList(id).then((val) => setPlayerNames(val))
+    if (!router.isReady) return
     watchPlayerList(id, (snapshot) => {
       const data = snapshot.val()
       setPlayerNames(data)
     })
-  })
+    watchStage(id, (snapshot) => {
+      if (snapshot.val() == 1) {
+        localStorage.setItem("NumberCorrect", "0")
+        router.push(
+          "/stage?id=" +
+            id +
+            "&host=" +
+            isHost.toString() +
+            "&stage=" +
+            snapshot.val()
+        )
+      }
+    })
+  }, [router.isReady])
 
   return (
     <Container maxWidth="sm">
@@ -35,8 +54,11 @@ export default function Lobby() {
           <></>
         )}
       </List>
-      {isHost ? (
-        <SpinnerButton disabled={false} job={async () => {}}>
+      {isHost && playerNames != null ? (
+        <SpinnerButton
+          disabled={playerNames.length <= 1}
+          job={() => changeStage(id, 1)}
+        >
           Spiel starten
         </SpinnerButton>
       ) : (

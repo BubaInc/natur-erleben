@@ -42,8 +42,14 @@ export const createGame = async (host: string) => {
   await set(ref(database, "games/" + id), {
     host: host,
     players: [host],
+    stage: 0,
   })
   return id
+}
+
+export const changeStage = async (gameId: string, newStage: number) => {
+  const stageRef = ref(database, "games/" + gameId + "/stage")
+  await set(stageRef, newStage)
 }
 
 const generateGameId = () => {
@@ -60,6 +66,20 @@ export const watchPlayerList = async (
 ) => {
   const playerListRef = ref(database, "games/" + gameId + "/players")
   onValue(playerListRef, listener)
+}
+
+export const watchStage = async (
+  gameId: string,
+  listener: (snapshot: DataSnapshot) => unknown
+) => {
+  const stageRef = ref(database, "games/" + gameId + "/stage")
+  onValue(stageRef, listener)
+}
+
+export const nextStage = async (gameId: string) => {
+  const stageRef = ref(database, "games/" + gameId + "/stage")
+  const currentStage = (await get(stageRef)).val()
+  await set(stageRef, currentStage + 1)
 }
 
 export const getPlayerList = async (gameId: string) =>
