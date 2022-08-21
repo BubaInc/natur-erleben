@@ -30,7 +30,6 @@ export default function Stage() {
             "&stage=" +
             snapshot.val()
         )
-        router.reload()
       }
     })
   }, [router.isReady])
