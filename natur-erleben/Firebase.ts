@@ -54,13 +54,16 @@ const generateGameId = () => {
   return num1 + num2 + num3 + num4
 }
 
-export const watchPlayerList = (
+export const watchPlayerList = async (
   gameId: string,
   listener: (snapshot: DataSnapshot) => unknown
 ) => {
   const playerListRef = ref(database, "games/" + gameId + "/players")
   onValue(playerListRef, listener)
 }
+
+export const getPlayerList = async (gameId: string) =>
+  (await get(ref(database, "games/" + gameId + "/players"))).val()
 
 export const joinGame = async (playerName: string, gameId: string) => {
   const playersRef = ref(database, "games/" + gameId + "/players")
