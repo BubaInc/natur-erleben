@@ -56,7 +56,7 @@ export default function Stage() {
     if (countdown == 0) {
       setAnswerStatus("timeout")
       setReady(items.gameId, items.name, true)
-      handler.setCanAnswer(true)
+      handler.setCanAnswer(false)
     } else {
       const timer = setInterval(() => setCountdown(countdown - 1), 1000)
       return () => clearInterval(timer)
@@ -102,7 +102,7 @@ export default function Stage() {
       <RenderIf condition={answerStatus == "timeout"}>
         <Alert severity="error">Die Zeit ist abgelaufen!</Alert>
       </RenderIf>
-      <RenderIf condition={answerStatus != "none"}>
+      <RenderIf condition={answerStatus != "none" && items.isHost}>
         <SpinnerButton
           disabled={!everyoneReady}
           job={async () => {
