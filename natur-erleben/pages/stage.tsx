@@ -44,7 +44,7 @@ export default function Stage() {
 
   const [stage, setStage] = useState(1)
 
-  const question = stages[stage]
+  const question = stages[stage.toString()]
   useEffect(() => setAnswers(shuffle(question.answers)), [stage])
   const [answers, setAnswers] = useState<string[]>([])
 
