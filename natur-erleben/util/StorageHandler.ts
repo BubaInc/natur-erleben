@@ -1,4 +1,4 @@
-type Field = "isHost" | "name" | "gameId" | "numberCorrect"
+type Field = "isHost" | "name" | "gameId" | "numberCorrect" | "stage"
 
 const setItem = (item: Field, value: string) =>
   window.localStorage.setItem(item, value)
@@ -11,12 +11,14 @@ const handler = {
     setItem("name", name)
     setItem("gameId", gameId)
     setItem("numberCorrect", "0")
+    setItem("stage", "1")
   },
   joinGame: (name: string, gameId: string) => {
     setItem("isHost", "false")
     setItem("name", name)
     setItem("gameId", gameId)
     setItem("numberCorrect", "0")
+    setItem("stage", "1")
   },
   getItems: () => {
     return {
@@ -24,6 +26,7 @@ const handler = {
       name: getItem("name") as string,
       gameId: getItem("gameId") as string,
       numberCorrect: parseInt(getItem("numberCorrect") as string),
+      stage: parseInt(getItem("stage") as string),
     }
   },
   increaseNumberCorrect: () =>
@@ -31,6 +34,7 @@ const handler = {
       "numberCorrect",
       (parseInt(getItem("numberCorrect") as string) + 1).toString()
     ),
+  nextStage: (stage: number) => setItem("stage", stage.toString()),
 }
 
 export default handler

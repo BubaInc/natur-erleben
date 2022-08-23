@@ -22,6 +22,7 @@ export default function Stage() {
   const [items, setItems] = useState<any>({})
   useEffect(() => setItems(handler.getItems()), [])
   useEffect(() => {
+    setStage(items.stage)
     watchStage(items.gameId, async (snapshot) => {
       if (stage == snapshot.val() - 1) {
         setStage(stage + 1)
