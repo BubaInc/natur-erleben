@@ -41,10 +41,17 @@ export const createGame = async (host: string) => {
   // upload new game entry
   await set(ref(database, "games/" + id), {
     host: host,
-    players: [{ name: host, ready: true }],
+    players: [{ name: host, ready: false }],
     stage: 0,
   })
   return id
+}
+
+export const joinGame = async (playerName: string, gameId: string) => {
+  const playersRef = ref(database, "games/" + gameId + "/players")
+  const data = (await get(playersRef)).val()
+  data.push({ name: playerName, ready: false })
+  await set(playersRef, data)
 }
 
 export const changeStage = async (gameId: string, newStage: number) => {
@@ -84,13 +91,6 @@ export const nextStage = async (gameId: string) => {
 
 export const getPlayerList = async (gameId: string) =>
   (await get(ref(database, "games/" + gameId + "/players"))).val()
-
-export const joinGame = async (playerName: string, gameId: string) => {
-  const playersRef = ref(database, "games/" + gameId + "/players")
-  const data = (await get(playersRef)).val()
-  data.push({ name: playerName, ready: true })
-  await set(playersRef, data)
-}
 
 export const disconnect = async (playerName: string, gameId: string) => {
   const playersRef = ref(database, "games/" + gameId + "/players")
