@@ -4,7 +4,6 @@ import List from "@mui/material/List"
 import ListItemButton from "@mui/material/ListItemButton"
 import ListItemText from "@mui/material/ListItemText"
 import Typography from "@mui/material/Typography"
-import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import RenderIf from "../components/RenderIf"
 import SpinnerButton from "../components/SpinnerButton"
@@ -28,7 +27,6 @@ export default function Stage() {
         setStage(stage + 1)
         setAnswerStatus("none")
         setCountdown(maxTime)
-        setOutOfTime(false)
         await setReady(items.gameId, items.name, false)
       }
     })
@@ -44,21 +42,18 @@ export default function Stage() {
   }, [items])
 
   const [stage, setStage] = useState(1)
-  console.log(items.stage)
 
   const question = stages[stage]
   useEffect(() => setAnswers(shuffle(question.answers)), [stage])
   const [answers, setAnswers] = useState<string[]>([])
 
-  type AnswerStatus = "none" | "correct" | "wrong"
+  type AnswerStatus = "none" | "correct" | "wrong" | "timeout"
   const [answerStatus, setAnswerStatus] = useState<AnswerStatus>("none")
-
-  const [outOfTime, setOutOfTime] = useState(false)
 
   const [countdown, setCountdown] = useState(maxTime)
   useEffect(() => {
     if (countdown == 0) {
-      setOutOfTime(true)
+      setAnswerStatus("timeout")
     } else {
       const timer = setInterval(() => setCountdown(countdown - 1), 1000)
       return () => clearInterval(timer)
@@ -67,12 +62,10 @@ export default function Stage() {
 
   const [everyoneReady, setEveryoneReady] = useState(false)
 
-  return question != null ? (
-    <Container maxWidth="sm">
-      <Typography variant="h2" sx={{ mb: 2 }}>
-        {question.question}
-      </Typography>
-      {answerStatus == "none" && !outOfTime ? (
+  let feedback = null
+  switch (answerStatus) {
+    case "none":
+      feedback = (
         <>
           <Typography variant="h3">{countdown}</Typography>
           <List>
@@ -95,36 +88,35 @@ export default function Stage() {
             ))}
           </List>
         </>
-      ) : (
-        <>
-          {answerStatus == "correct" ? (
-            <Alert severity="success">Richtige Antwort!</Alert>
-          ) : (
-            <RenderIf condition={!outOfTime}>
-              <Alert severity="error">Falsche Antwort!</Alert>
-            </RenderIf>
-          )}
-          <RenderIf condition={items.isHost}>
-            <SpinnerButton
-              disabled={!everyoneReady}
-              job={async () => {
-                await nextStage(items.gameId)
-                setCountdown(maxTime)
-              }}
-            >
-              Nächste Station
-            </SpinnerButton>
-          </RenderIf>
-          <RenderIf
-            condition={
-              outOfTime &&
-              !(answerStatus == "correct" || answerStatus == "wrong")
-            }
-          >
-            <Alert severity="error">Die Zeit ist abgelaufen!</Alert>
-          </RenderIf>
-        </>
-      )}
+      )
+      break
+    case "correct":
+      feedback = <Alert severity="success">Richtige Antwort!</Alert>
+      break
+    case "wrong":
+      feedback = <Alert severity="error">Falsche Antwort!</Alert>
+      break
+    case "timeout":
+      feedback = <Alert severity="error">Die Zeit ist abgelaufen!</Alert>
+      break
+  }
+
+  return question != null ? (
+    <Container maxWidth="sm">
+      <Typography variant="h2" sx={{ mb: 2 }}>
+        {question.question}
+      </Typography>
+      <RenderIf condition={items.isHost}>
+        <SpinnerButton
+          disabled={!everyoneReady}
+          job={async () => {
+            await nextStage(items.gameId)
+            setCountdown(maxTime)
+          }}
+        >
+          Nächste Station
+        </SpinnerButton>
+      </RenderIf>
     </Container>
   ) : (
     <></>
