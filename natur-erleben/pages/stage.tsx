@@ -55,7 +55,7 @@ export default function Stage() {
   useEffect(() => {
     if (countdown == 0) {
       setAnswerStatus("timeout")
-      handler.setCanAnswer("false")
+      handler.setCanAnswer(true)
     } else {
       const timer = setInterval(() => setCountdown(countdown - 1), 1000)
       return () => clearInterval(timer)
