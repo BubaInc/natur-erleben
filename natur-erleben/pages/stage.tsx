@@ -18,9 +18,11 @@ export default function Stage() {
   useEffect(() => setItems(handler.getItems()), [])
   useEffect(() => {
     watchStage(items.gameId, (snapshot) => {
-      if (stage == snapshot.val() - 1) setStage(stage + 1)
+      if (stage == snapshot.val() - 1) {
+        setStage(stage + 1)
+        setAnswerStatus("none")
+      }
     })
-    console.log(items)
   }, [items])
 
   const [stage, setStage] = useState(1)
@@ -30,14 +32,14 @@ export default function Stage() {
   const [answers, setAnswers] = useState<string[]>([])
 
   type AnswerStatus = "none" | "correct" | "wrong"
-  const [questionAnswered, setQuestionAnswered] = useState<AnswerStatus>("none")
+  const [answerStatus, setAnswerStatus] = useState<AnswerStatus>("none")
 
   return question != null ? (
     <Container maxWidth="sm">
       <Typography variant="h2" sx={{ mb: 2 }}>
         {question.question}
       </Typography>
-      {questionAnswered == "none" ? (
+      {answerStatus == "none" ? (
         <List>
           {answers.map((answer, i) => (
             <ListItemButton
@@ -45,10 +47,10 @@ export default function Stage() {
               color="secondary"
               onClick={() => {
                 if (answer == question.right) {
-                  setQuestionAnswered("correct")
+                  setAnswerStatus("correct")
                   handler.increaseNumberCorrect()
                 } else {
-                  setQuestionAnswered("wrong")
+                  setAnswerStatus("wrong")
                 }
               }}
             >
@@ -58,7 +60,7 @@ export default function Stage() {
         </List>
       ) : (
         <>
-          {questionAnswered == "correct" ? (
+          {answerStatus == "correct" ? (
             <Alert severity="success">Richtige Antwort!</Alert>
           ) : (
             <Alert severity="error">Falsche Antwort!</Alert>
