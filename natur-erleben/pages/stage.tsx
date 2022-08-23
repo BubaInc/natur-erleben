@@ -22,7 +22,7 @@ export default function Stage() {
   const [items, setItems] = useState<any>({})
   useEffect(() => setItems(handler.getItems()), [])
   useEffect(() => {
-    setStage(items.stage)
+    if (items.stage != undefined) setStage(items.stage)
     watchStage(items.gameId, async (snapshot) => {
       if (stage == snapshot.val() - 1) {
         setStage(stage + 1)
@@ -44,6 +44,7 @@ export default function Stage() {
   }, [items])
 
   const [stage, setStage] = useState(1)
+  console.log(items.stage)
 
   const question = stages[stage]
   useEffect(() => setAnswers(shuffle(question.answers)), [stage])
