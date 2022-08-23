@@ -84,7 +84,7 @@ const Home: NextPage = () => {
                 job={async () => {
                   if (createMode) {
                     const id = await createGame(playerName)
-                    handler.createGame(playerName, id)
+                    handler.init(playerName, id, true)
                     router.push("/lobby")
                   } else {
                     if (!(await isGameIdValid(gameId))) {
@@ -96,7 +96,7 @@ const Home: NextPage = () => {
                       return
                     }
                     await joinGame(playerName, gameId)
-                    handler.joinGame(playerName, gameId)
+                    handler.init(playerName, gameId, false)
                     router.push("/lobby")
                   }
                 }}

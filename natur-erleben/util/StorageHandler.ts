@@ -1,4 +1,10 @@
-type Field = "isHost" | "name" | "gameId" | "numberCorrect" | "stage"
+type Field =
+  | "isHost"
+  | "name"
+  | "gameId"
+  | "numberCorrect"
+  | "stage"
+  | "canAnswer"
 
 const setItem = (item: Field, value: string) =>
   window.localStorage.setItem(item, value)
@@ -6,19 +12,13 @@ const setItem = (item: Field, value: string) =>
 const getItem = (item: Field) => window.localStorage.getItem(item)
 
 const handler = {
-  createGame: (name: string, gameId: string) => {
-    setItem("isHost", "true")
+  init: (name: string, gameId: string, isHost: boolean) => {
+    setItem("isHost", isHost.toString())
     setItem("name", name)
     setItem("gameId", gameId)
     setItem("numberCorrect", "0")
     setItem("stage", "1")
-  },
-  joinGame: (name: string, gameId: string) => {
-    setItem("isHost", "false")
-    setItem("name", name)
-    setItem("gameId", gameId)
-    setItem("numberCorrect", "0")
-    setItem("stage", "1")
+    setItem("canAnswer", "true")
   },
   getItems: () => {
     return {
@@ -27,6 +27,7 @@ const handler = {
       gameId: getItem("gameId") as string,
       numberCorrect: parseInt(getItem("numberCorrect") as string),
       stage: parseInt(getItem("stage") as string),
+      canAnswer: getItem("canAnswer") == "true",
     }
   },
   increaseNumberCorrect: () =>
@@ -35,6 +36,8 @@ const handler = {
       (parseInt(getItem("numberCorrect") as string) + 1).toString()
     ),
   nextStage: (stage: number) => setItem("stage", stage.toString()),
+  setCanAnswer: (canAnswer: boolean) =>
+    setItem("canAnswer", canAnswer.toString()),
 }
 
 export default handler
