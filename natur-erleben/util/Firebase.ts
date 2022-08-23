@@ -41,7 +41,7 @@ export const createGame = async (host: string) => {
   // upload new game entry
   await set(ref(database, "games/" + id), {
     host: host,
-    players: [host],
+    players: [{ name: host, ready: true }],
     stage: 0,
   })
   return id
@@ -88,7 +88,7 @@ export const getPlayerList = async (gameId: string) =>
 export const joinGame = async (playerName: string, gameId: string) => {
   const playersRef = ref(database, "games/" + gameId + "/players")
   const data = (await get(playersRef)).val()
-  data.push(playerName)
+  data.push({ name: playerName, ready: true })
   await set(playersRef, data)
 }
 
@@ -117,4 +117,13 @@ export const isPlayerNameAvailable = async (
 export const isGameIdValid = async (gameId: string) => {
   const snapshot = await get(ref(database, "games/" + gameId))
   return snapshot.exists()
+}
+
+export const isEveryoneReady = async (gameId: string) => {
+  const playersRef = ref(database, "games/" + gameId + "/players")
+  const data = await get(playersRef)
+  return !data
+    .val()
+    .map((player: any) => player.ready)
+    .includes(false)
 }

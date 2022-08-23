@@ -17,7 +17,7 @@ export default function Lobby() {
   useEffect(() => {
     watchPlayerList(items.gameId, (snapshot) => {
       const data = snapshot.val()
-      if (data != null) setPlayerNames(data)
+      if (data != null) setPlayerNames(data.map((player: any) => player.name))
     })
     watchStage(items.gameId, (snapshot) => {
       if (snapshot.val() == 1) router.push("/stage")
