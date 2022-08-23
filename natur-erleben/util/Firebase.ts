@@ -133,9 +133,10 @@ export const setReady = async (
   name: string,
   ready: boolean
 ) => {
-  const readyRef = ref(
-    database,
-    "games/" + gameId + "/players/" + name + "/ready"
-  )
-  await set(readyRef, ready)
+  const playersRef = ref(database, "games/" + gameId + "/players")
+  const players = (await get(playersRef)).val()
+  players.forEach((player: any, i: number) => {
+    if (player.name == name) players[i].ready = true
+  })
+  await set(playersRef, players)
 }
