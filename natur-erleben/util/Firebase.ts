@@ -127,3 +127,15 @@ export const isEveryoneReady = async (gameId: string) => {
     .map((player: any) => player.ready)
     .includes(false)
 }
+
+export const setReady = async (
+  gameId: string,
+  name: string,
+  ready: boolean
+) => {
+  const readyRef = ref(
+    database,
+    "games/" + gameId + "/players/" + name + "/ready"
+  )
+  await set(readyRef, ready)
+}

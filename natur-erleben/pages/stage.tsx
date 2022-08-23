@@ -8,7 +8,12 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import RenderIf from "../components/RenderIf"
 import SpinnerButton from "../components/SpinnerButton"
-import { nextStage, watchPlayerList, watchStage } from "../util/Firebase"
+import {
+  nextStage,
+  setReady,
+  watchPlayerList,
+  watchStage,
+} from "../util/Firebase"
 import handler from "../util/StorageHandler"
 
 export default function Stage() {
@@ -17,14 +22,16 @@ export default function Stage() {
   const [items, setItems] = useState<any>({})
   useEffect(() => setItems(handler.getItems()), [])
   useEffect(() => {
-    watchStage(items.gameId, (snapshot) => {
+    watchStage(items.gameId, async (snapshot) => {
       if (stage == snapshot.val() - 1) {
         setStage(stage + 1)
         setAnswerStatus("none")
         setOutOfTime(false)
+        await setReady(items.gameId, items.name, false)
       }
     })
     watchPlayerList(items.gameId, (snapshot) => {
+      if (snapshot.val() == null) return
       setEveryoneReady(
         !snapshot
           .val()
@@ -70,13 +77,14 @@ export default function Stage() {
               <ListItemButton
                 key={i}
                 color="secondary"
-                onClick={() => {
+                onClick={async () => {
                   if (answer == question.right) {
                     setAnswerStatus("correct")
                     handler.increaseNumberCorrect()
                   } else {
                     setAnswerStatus("wrong")
                   }
+                  await setReady(items.gameId, items.name, true)
                 }}
               >
                 <ListItemText>{answer}</ListItemText>
@@ -94,11 +102,19 @@ export default function Stage() {
             </RenderIf>
           )}
           <RenderIf condition={items.isHost}>
-            <SpinnerButton disabled={false} job={() => nextStage(items.gameId)}>
+            <SpinnerButton
+              disabled={!everyoneReady}
+              job={() => nextStage(items.gameId)}
+            >
               Nächste Station
             </SpinnerButton>
           </RenderIf>
-          <RenderIf condition={outOfTime}>
+          <RenderIf
+            condition={
+              outOfTime &&
+              !(answerStatus == "correct" || answerStatus == "wrong")
+            }
+          >
             <Alert severity="error">Die Zeit ist abgelaufen!</Alert>
           </RenderIf>
         </>
