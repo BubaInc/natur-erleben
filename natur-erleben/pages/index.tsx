@@ -13,7 +13,8 @@ import {
   isGameIdValid,
   isPlayerNameAvailable,
   joinGame,
-} from "../Firebase"
+} from "../util/Firebase"
+import handler from "../util/StorageHandler"
 
 const Home: NextPage = () => {
   const [playerName, setPlayerName] = useState("")
@@ -83,9 +84,8 @@ const Home: NextPage = () => {
                 job={async () => {
                   if (createMode) {
                     const id = await createGame(playerName)
-                    router.push("/lobby?id=" + id + "&host=true")
-                    window.localStorage.setItem("name", playerName)
-                    window.localStorage.setItem("id", id)
+                    handler.createGame(playerName, id)
+                    router.push("/lobby")
                   } else {
                     if (!(await isGameIdValid(gameId))) {
                       setInvalidGameId(true)
@@ -96,9 +96,8 @@ const Home: NextPage = () => {
                       return
                     }
                     await joinGame(playerName, gameId)
-                    router.push("/lobby?id=" + gameId + "&host=false")
-                    window.localStorage.setItem("name", playerName)
-                    window.localStorage.setItem("id", gameId)
+                    handler.joinGame(playerName, gameId)
+                    router.push("/lobby")
                   }
                 }}
                 disabled={

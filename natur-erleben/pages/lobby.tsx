@@ -6,64 +6,42 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import RenderIf from "../components/RenderIf"
 import SpinnerButton from "../components/SpinnerButton"
-import {
-  changeStage,
-  disconnect,
-  getPlayerList,
-  watchPlayerList,
-  watchStage,
-} from "../Firebase"
+import { changeStage, watchPlayerList, watchStage } from "../util/Firebase"
+import handler from "../util/StorageHandler"
 
 export default function Lobby() {
   const router = useRouter()
-  const id = router.query.id as string
-  const isHost = (router.query.host as string) == "true"
+  const [items, setItems] = useState<any>({})
   const [playerNames, setPlayerNames] = useState<string[]>([])
+  useEffect(() => setItems(handler.getItems()), [])
   useEffect(() => {
-    if (!router.isReady) return
-    watchPlayerList(id, (snapshot) => {
+    watchPlayerList(items.gameId, (snapshot) => {
       const data = snapshot.val()
-      setPlayerNames(data)
+      if (data != null) setPlayerNames(data)
     })
-    watchStage(id, (snapshot) => {
-      if (snapshot.val() == 1) {
-        localStorage.setItem("NumberCorrect", "0")
-        router.push(
-          "/stage?id=" +
-            id +
-            "&host=" +
-            isHost.toString() +
-            "&stage=" +
-            snapshot.val()
-        )
-      }
+    watchStage(items.gameId, (snapshot) => {
+      if (snapshot.val() == 1) router.push("/stage")
     })
-  }, [router.isReady])
+  }, [items])
 
   return (
     <Container maxWidth="sm">
       <Typography variant="h2" sx={{ mb: 2 }}>
-        ID: {id}
+        ID: {items.gameId}
       </Typography>
       <List>
-        {playerNames != null && playerNames.length != 0 ? (
-          playerNames.map((name, i) => {
-            return <ListItemText key={i}>{name}</ListItemText>
-          })
-        ) : (
-          <></>
-        )}
+        {playerNames.map((name, i) => {
+          return <ListItemText key={i}>{name}</ListItemText>
+        })}
       </List>
-      {isHost && playerNames != null ? (
+      <RenderIf condition={items.isHost}>
         <SpinnerButton
           disabled={playerNames.length <= 1}
-          job={() => changeStage(id, 1)}
+          job={() => changeStage(items.gameId, 1)}
         >
           Spiel starten
         </SpinnerButton>
-      ) : (
-        <></>
-      )}
+      </RenderIf>
     </Container>
   )
 }

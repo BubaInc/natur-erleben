@@ -8,31 +8,29 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import RenderIf from "../components/RenderIf"
 import SpinnerButton from "../components/SpinnerButton"
-import { nextStage, watchStage } from "../Firebase"
+import { nextStage, watchStage } from "../util/Firebase"
+import handler from "../util/StorageHandler"
 
 export default function Stage() {
   const router = useRouter()
-  const stage = router.query.stage as string
-  const id = router.query.id as string
-  const isHost = (router.query.host as string) == "true"
+
+  const [items, setItems] = useState<any>({})
+  useEffect(() => setItems(handler.getItems()), [])
+  useEffect(() => {
+    watchStage(items.gameId, (snapshot) => {
+      if (stage == snapshot.val() - 1) setStage(stage + 1)
+    })
+    console.log(items)
+  }, [items])
+
+  const [stage, setStage] = useState(1)
+
   const question = stages[stage]
+  useEffect(() => setAnswers(shuffle(question.answers)), [stage])
+  const [answers, setAnswers] = useState<string[]>([])
+
   type AnswerStatus = "none" | "correct" | "wrong"
   const [questionAnswered, setQuestionAnswered] = useState<AnswerStatus>("none")
-  useEffect(() => {
-    if (!router.isReady) return
-    watchStage(id, (snapshot) => {
-      if (parseInt(stage) == snapshot.val() - 1) {
-        router.push(
-          "/stage?id=" +
-            id +
-            "&host=" +
-            isHost.toString() +
-            "&stage=" +
-            snapshot.val()
-        )
-      }
-    })
-  }, [router.isReady])
 
   return question != null ? (
     <Container maxWidth="sm">
@@ -41,14 +39,14 @@ export default function Stage() {
       </Typography>
       {questionAnswered == "none" ? (
         <List>
-          {shuffle(question.answers).map((answer, i) => (
+          {answers.map((answer, i) => (
             <ListItemButton
               key={i}
               color="secondary"
               onClick={() => {
                 if (answer == question.right) {
                   setQuestionAnswered("correct")
-                  increaseNumberCorrect()
+                  handler.increaseNumberCorrect()
                 } else {
                   setQuestionAnswered("wrong")
                 }
@@ -65,8 +63,8 @@ export default function Stage() {
           ) : (
             <Alert severity="error">Falsche Antwort!</Alert>
           )}
-          <RenderIf condition={isHost}>
-            <SpinnerButton disabled={false} job={() => nextStage(id)}>
+          <RenderIf condition={items.isHost}>
+            <SpinnerButton disabled={false} job={() => nextStage(items.gameId)}>
               Nächste Station
             </SpinnerButton>
           </RenderIf>
@@ -106,9 +104,3 @@ const shuffle = (a: any[]) => {
   }
   return a
 }
-
-const increaseNumberCorrect = () =>
-  localStorage.setItem(
-    "NumberCorrect",
-    (parseInt(localStorage.getItem("NumberCorrect") as string) + 1).toString()
-  )
