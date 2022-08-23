@@ -17,7 +17,7 @@ import {
 import handler from "../util/StorageHandler"
 
 export default function Stage() {
-  const router = useRouter()
+  const maxTime = 10
 
   const [items, setItems] = useState<any>({})
   useEffect(() => setItems(handler.getItems()), [])
@@ -26,6 +26,7 @@ export default function Stage() {
       if (stage == snapshot.val() - 1) {
         setStage(stage + 1)
         setAnswerStatus("none")
+        setCountdown(maxTime)
         setOutOfTime(false)
         await setReady(items.gameId, items.name, false)
       }
@@ -52,7 +53,7 @@ export default function Stage() {
 
   const [outOfTime, setOutOfTime] = useState(false)
 
-  const [countdown, setCountdown] = useState(10)
+  const [countdown, setCountdown] = useState(maxTime)
   useEffect(() => {
     if (countdown == 0) {
       setOutOfTime(true)
@@ -104,7 +105,10 @@ export default function Stage() {
           <RenderIf condition={items.isHost}>
             <SpinnerButton
               disabled={!everyoneReady}
-              job={() => nextStage(items.gameId)}
+              job={async () => {
+                await nextStage(items.gameId)
+                setCountdown(maxTime)
+              }}
             >
               Nächste Station
             </SpinnerButton>
