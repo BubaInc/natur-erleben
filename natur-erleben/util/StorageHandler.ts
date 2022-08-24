@@ -59,7 +59,7 @@ export const useItems = (onItemsReady: (i: Items) => void) => {
     name: "",
     isHost: false,
     numberCorrect: 0,
-    stage: 0,
+    stage: 1,
     canAnswer: false,
   })
   useEffect(() => setItems(handler.getItems()), [])

@@ -7,20 +7,17 @@ import Typography from "@mui/material/Typography"
 import { useEffect, useState } from "react"
 import RenderIf from "../components/RenderIf"
 import SpinnerButton from "../components/SpinnerButton"
+import Timer from "../components/Timer"
 import {
   nextStage,
   setReady,
   watchPlayerList,
   watchStage,
 } from "../util/Firebase"
-import handler from "../util/StorageHandler"
+import handler, { useItems } from "../util/StorageHandler"
 
 export default function Stage() {
-  const maxTime = 10
-
-  const [items, setItems] = useState<any>({})
-  useEffect(() => setItems(handler.getItems()), [])
-  useEffect(() => {
+  const items = useItems((items) => {
     if (items.stage != undefined) setStage(items.stage)
     watchStage(items.gameId, async (snapshot) => {
       if (stage == snapshot.val() - 1) {
@@ -28,6 +25,7 @@ export default function Stage() {
         setAnswerStatus("none")
         setCountdown(maxTime)
         handler.setCanAnswer(true)
+        console.log(snapshot.val())
         await setReady(items.gameId, items.name, false)
       }
     })
@@ -40,30 +38,21 @@ export default function Stage() {
           .includes(false)
       )
     })
-  }, [items])
+  })
 
   const [stage, setStage] = useState(1)
-
-  const question = stages[stage.toString()]
-  useEffect(() => setAnswers(shuffle(question.answers)), [stage])
+  console.log(stage)
+  const question = stages[stage]
   const [answers, setAnswers] = useState<string[]>([])
+  useEffect(() => setAnswers(shuffle(question.answers)), [stage])
 
   type AnswerStatus = "none" | "correct" | "wrong" | "timeout"
   const [answerStatus, setAnswerStatus] = useState<AnswerStatus>("none")
 
-  const [countdown, setCountdown] = useState(maxTime)
-  useEffect(() => {
-    if (countdown == 0) {
-      setAnswerStatus("timeout")
-      setReady(items.gameId, items.name, true)
-      handler.setCanAnswer(false)
-    } else {
-      const timer = setInterval(() => setCountdown(countdown - 1), 1000)
-      return () => clearInterval(timer)
-    }
-  }, [countdown])
-
   const [everyoneReady, setEveryoneReady] = useState(false)
+
+  const maxTime = 10
+  const [countdown, setCountdown] = useState(maxTime)
 
   return question != null ? (
     <Container maxWidth="sm">
@@ -71,21 +60,29 @@ export default function Stage() {
         {question.question}
       </Typography>
       <RenderIf condition={answerStatus == "none"}>
-        <Typography variant="h3">{countdown}</Typography>
+        <Timer
+          countdown={countdown}
+          setCountdown={setCountdown}
+          onTimeout={() => {
+            setAnswerStatus("timeout")
+            setReady(items.gameId, items.name, true)
+            handler.setCanAnswer(false)
+          }}
+        />
         <List>
           {answers.map((answer, i) => (
             <ListItemButton
               key={i}
               color="secondary"
               disabled={!items.canAnswer}
-              onClick={async () => {
+              onClick={() => {
+                setReady(items.gameId, items.name, true)
                 if (answer == question.right) {
                   setAnswerStatus("correct")
                   handler.increaseNumberCorrect()
                 } else {
                   setAnswerStatus("wrong")
                 }
-                await setReady(items.gameId, items.name, true)
               }}
             >
               <ListItemText>{answer}</ListItemText>
@@ -120,17 +117,17 @@ export default function Stage() {
 }
 
 const stages: any = {
-  "1": {
+  1: {
     question: "Wie heißt die Mutter von Nicki Lauda?",
     answers: ["Mama Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
     right: "Mama Lauda",
   },
-  "2": {
+  2: {
     question: "Wie heißt der Vater von Nicki Lauda?",
     answers: ["Papa Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
     right: "Mama Lauda",
   },
-  "3": {
+  3: {
     question: "Wie heißt der Bruder von Nicki Lauda?",
     answers: ["Bruder Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
     right: "Mama Lauda",
