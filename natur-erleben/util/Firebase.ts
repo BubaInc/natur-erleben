@@ -41,7 +41,7 @@ export const createGame = async (host: string) => {
   // upload new game entry
   await set(ref(database, "games/" + id), {
     host: host,
-    players: [{ name: host, ready: false }],
+    players: [{ name: host, ready: false, numberCorrect: 0 }],
     stage: 0,
   })
   return id
@@ -50,7 +50,7 @@ export const createGame = async (host: string) => {
 export const joinGame = async (playerName: string, gameId: string) => {
   const playersRef = ref(database, "games/" + gameId + "/players")
   const data = (await get(playersRef)).val()
-  data.push({ name: playerName, ready: false })
+  data.push({ name: playerName, ready: false, numberCorrect: 0 })
   await set(playersRef, data)
 }
 
@@ -148,4 +148,13 @@ export const makeEveryoneUnready = async (gameId: string) => {
     return { name: player.name, ready: false }
   })
   await set(playersRef, newData)
+}
+
+export const increaseNumberCorrect = async (gameId: string, name: string) => {
+  const playersRef = ref(database, "games/" + gameId + "/players")
+  const data = (await get(playersRef)).val()
+  data.forEach((player: any, i: number) => {
+    if (player.name == name) data[i].numberCorrect++
+  })
+  await set(playersRef, data)
 }

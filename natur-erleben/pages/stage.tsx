@@ -37,6 +37,10 @@ export default function Stage() {
           .map((player: any) => player.ready)
           .includes(false)
       )
+      setIAmReady(
+        snapshot.val().filter((player: any) => player.name == items.name)[0]
+          .ready
+      )
     })
   })
 
@@ -49,6 +53,7 @@ export default function Stage() {
   const [answerStatus, setAnswerStatus] = useState<AnswerStatus>("none")
 
   const [everyoneReady, setEveryoneReady] = useState(false)
+  const [iAmReady, setIAmReady] = useState(false)
 
   const maxTime = 10
   const [countdown, setCountdown] = useState(maxTime)
@@ -64,6 +69,7 @@ export default function Stage() {
           setCountdown={setCountdown}
           onTimeout={() => {
             setAnswerStatus("timeout")
+            setEveryoneReady(true)
             setReady(items.gameId, items.name, true)
             handler.setCanAnswer(false)
           }}
@@ -73,7 +79,7 @@ export default function Stage() {
             <ListItemButton
               key={i}
               color="secondary"
-              disabled={!items.canAnswer}
+              disabled={iAmReady}
               onClick={() => {
                 setReady(items.gameId, items.name, true)
                 if (answer == question.right) {
