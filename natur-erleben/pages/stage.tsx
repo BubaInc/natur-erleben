@@ -24,6 +24,7 @@ export default function Stage() {
   const items = useItems((items) => {
     if (items.stage != undefined) setStage(items.stage)
     watchStage(items.gameId, async (snapshot) => {
+      if (snapshot.val() == undefined) return
       if (stages[snapshot.val()] == undefined) {
         router.push("/result")
       } else if (snapshot.val() > stage) {
