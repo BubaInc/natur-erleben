@@ -161,6 +161,7 @@ export const increaseNumberCorrect = async (gameId: string, name: string) => {
     if (player.name == name) {
       const newPlayer = data[i]
       newPlayer.numberCorrect++
+      newPlayer.ready = true
       data[i] = newPlayer
     }
   })
