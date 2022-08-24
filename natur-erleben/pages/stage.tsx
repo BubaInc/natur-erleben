@@ -21,6 +21,7 @@ import handler, { useItems } from "../util/StorageHandler"
 export default function Stage() {
   const items = useItems((items) => {
     if (items.stage != undefined) setStage(items.stage)
+    setCountdown(items.countdown)
     watchStage(items.gameId, async (snapshot) => {
       if (snapshot.val() > stage) {
         setStage(snapshot.val())

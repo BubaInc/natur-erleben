@@ -7,6 +7,7 @@ type Field =
   | "numberCorrect"
   | "stage"
   | "canAnswer"
+  | "countdown"
 
 type Items = {
   isHost: boolean
@@ -15,6 +16,7 @@ type Items = {
   numberCorrect: number
   stage: number
   canAnswer: boolean
+  countdown: number
 }
 
 const setItem = (item: Field, value: string) =>
@@ -31,6 +33,7 @@ const handler = {
     setItem("numberCorrect", "0")
     setItem("stage", "1")
     setItem("canAnswer", "true")
+    setItem("countdown", "10")
   },
   getItems: () => {
     return {
@@ -40,6 +43,7 @@ const handler = {
       numberCorrect: parseInt(getItem("numberCorrect") as string),
       stage: parseInt(getItem("stage") as string),
       canAnswer: getItem("canAnswer") == "true",
+      countdown: parseInt(getItem("countdown") as string),
     }
   },
   increaseNumberCorrect: () =>
@@ -50,6 +54,7 @@ const handler = {
   nextStage: (stage: number) => setItem("stage", stage.toString()),
   setCanAnswer: (canAnswer: boolean) =>
     setItem("canAnswer", canAnswer.toString()),
+  setCountdown: (c: number) => setItem("countdown", c.toString()),
 }
 
 export default handler
@@ -62,6 +67,7 @@ export const useItems = (onItemsReady: (i: Items) => void) => {
     numberCorrect: 0,
     stage: 1,
     canAnswer: false,
+    countdown: 10,
   })
   useEffect(() => setItems(handler.getItems()), [])
   useEffect(() => {

@@ -1,5 +1,6 @@
 import Typography from "@mui/material/Typography"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import handler from "../../util/StorageHandler"
 
 export default function Timer({
   countdown,
@@ -15,6 +16,7 @@ export default function Timer({
       onTimeout()
     } else {
       const timer = setInterval(() => setCountdown(countdown - 1), 1000)
+      handler.setCountdown(countdown - 1)
       return () => clearInterval(timer)
     }
   }, [countdown])
