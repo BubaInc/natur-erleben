@@ -36,19 +36,18 @@ export default function Stage() {
         snapshot.val().filter((player: any) => player.name == items.name)[0]
           .ready
       )
+      console.log(snapshot.val())
+      setEveryoneReady(
+        !snapshot
+          .val()
+          .map((player: any) => player.ready)
+          .includes(false)
+      )
       setPlayerData(snapshot.val())
     })
   })
 
   const [playerData, setPlayerData] = useState<any>([])
-
-  useEffect(
-    () =>
-      setEveryoneReady(
-        !playerData.map((player: any) => player.ready).includes(false)
-      ),
-    [playerData]
-  )
 
   const [stage, setStage] = useState(1)
   const question = stages[stage]

@@ -157,8 +157,12 @@ export const makeEveryoneUnready = async (gameId: string) => {
 export const increaseNumberCorrect = async (gameId: string, name: string) => {
   const playersRef = ref(database, "games/" + gameId + "/players")
   const data = (await get(playersRef)).val()
-  data.forEach((player: any, i: number) => {
-    if (player.name == name) data[i].numberCorrect++
+  const newData = data.map((player: any) => {
+    return {
+      name: player.name,
+      ready: player.ready,
+      numberCorrect: player.numberCorrect + 1,
+    }
   })
-  await set(playersRef, data)
+  await set(playersRef, newData)
 }
