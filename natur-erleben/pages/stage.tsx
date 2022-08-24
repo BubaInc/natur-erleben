@@ -42,8 +42,11 @@ export default function Stage() {
         snapshot.val().filter((player: any) => player.name == items.name)[0]
           .ready
       )
+      setPlayerData(snapshot.val())
     })
   })
+
+  const [playerData, setPlayerData] = useState<any>([])
 
   const [stage, setStage] = useState(1)
   const question = stages[stage]
@@ -86,7 +89,7 @@ export default function Stage() {
                 if (answer == question.right) {
                   setAnswerStatus("correct")
                   handler.increaseNumberCorrect()
-                  await increaseNumberCorrect(items.gameId, items.name)
+                  increaseNumberCorrect(items.gameId, items.name)
                 } else {
                   setAnswerStatus("wrong")
                 }
@@ -105,6 +108,17 @@ export default function Stage() {
       </RenderIf>
       <RenderIf condition={answerStatus == "timeout"}>
         <Alert severity="error">Die Zeit ist abgelaufen!</Alert>
+      </RenderIf>
+      <RenderIf condition={answerStatus != "none"}>
+        <List>
+          {[...playerData]
+            .sort((a: any, b: any) => b.numberCorrect - a.numberCorrect)
+            .map((player: any) => (
+              <ListItemText>
+                {player.name + " " + player.numberCorrect}
+              </ListItemText>
+            ))}
+        </List>
       </RenderIf>
       <RenderIf condition={answerStatus != "none" && items.isHost}>
         <SpinnerButton
