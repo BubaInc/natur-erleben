@@ -24,6 +24,7 @@ const getItem = (item: Field) => window.localStorage.getItem(item)
 
 const handler = {
   init: (name: string, gameId: string, isHost: boolean) => {
+    window.localStorage.clear()
     setItem("isHost", isHost.toString())
     setItem("name", name)
     setItem("gameId", gameId)

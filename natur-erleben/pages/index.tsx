@@ -6,7 +6,8 @@ import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography"
 import type { NextPage } from "next"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import RenderIf from "../components/RenderIf"
 import SpinnerButton from "../components/SpinnerButton"
 import {
   createGame,
@@ -14,7 +15,7 @@ import {
   isPlayerNameAvailable,
   joinGame,
 } from "../util/Firebase"
-import handler from "../util/StorageHandler"
+import handler, { useItems } from "../util/StorageHandler"
 
 const Home: NextPage = () => {
   const [playerName, setPlayerName] = useState("")
@@ -25,6 +26,14 @@ const Home: NextPage = () => {
   const [invalidGameId, setInvalidGameId] = useState(false)
   const [invalidPlayerName, setInvalidPlayerName] = useState(false)
 
+  useEffect(() => {
+    const gameId = window.localStorage.getItem("gameId")
+    if (gameId != null) {
+      setReconnect(gameId)
+    }
+  }, [])
+  const [reconnect, setReconnect] = useState("")
+
   return (
     <Container maxWidth="sm">
       <Grid container spacing={2}>
@@ -33,6 +42,13 @@ const Home: NextPage = () => {
             <Typography variant="h2">Natur Erleben</Typography>
           </Box>
         </Grid>
+        <RenderIf condition={reconnect != ""}>
+          <Grid item xs={12}>
+            <Button onClick={() => router.push("/stage")}>
+              Wieder mit Spiel {reconnect} verbinden
+            </Button>
+          </Grid>
+        </RenderIf>
         {step == 0 ? (
           <>
             <Grid item xs={12}>
