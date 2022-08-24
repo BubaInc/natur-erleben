@@ -32,12 +32,6 @@ export default function Stage() {
     })
     watchPlayerList(items.gameId, (snapshot) => {
       if (snapshot.val() == null) return
-      setEveryoneReady(
-        !snapshot
-          .val()
-          .map((player: any) => player.ready)
-          .includes(false)
-      )
       setIAmReady(
         snapshot.val().filter((player: any) => player.name == items.name)[0]
           .ready
@@ -47,6 +41,14 @@ export default function Stage() {
   })
 
   const [playerData, setPlayerData] = useState<any>([])
+
+  useEffect(
+    () =>
+      setEveryoneReady(
+        !playerData.map((player: any) => player.ready).includes(false)
+      ),
+    [playerData]
+  )
 
   const [stage, setStage] = useState(1)
   const question = stages[stage]
