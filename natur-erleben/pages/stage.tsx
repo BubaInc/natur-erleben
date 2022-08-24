@@ -90,7 +90,7 @@ export default function Stage() {
                 if (answer == question.right) {
                   setAnswerStatus("correct")
                   handler.increaseNumberCorrect()
-                  increaseNumberCorrect(items.gameId, items.name)
+                  // increaseNumberCorrect(items.gameId, items.name)
                 } else {
                   setAnswerStatus("wrong")
                 }
