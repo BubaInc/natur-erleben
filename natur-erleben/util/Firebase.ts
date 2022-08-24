@@ -140,3 +140,12 @@ export const setReady = async (
   })
   await set(playersRef, players)
 }
+
+export const makeEveryoneUnready = async (gameId: string) => {
+  const playersRef = ref(database, "games/" + gameId + "/players")
+  const data = (await get(playersRef)).val()
+  const newData = data.map((player: any) => {
+    return { name: player.name, ready: false }
+  })
+  await set(playersRef, newData)
+}

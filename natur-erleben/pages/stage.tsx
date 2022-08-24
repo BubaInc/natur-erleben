@@ -9,6 +9,7 @@ import RenderIf from "../components/RenderIf"
 import SpinnerButton from "../components/SpinnerButton"
 import Timer from "../components/Timer"
 import {
+  makeEveryoneUnready,
   nextStage,
   setReady,
   watchPlayerList,
@@ -101,6 +102,7 @@ export default function Stage() {
         <SpinnerButton
           disabled={!everyoneReady}
           job={async () => {
+            await makeEveryoneUnready(items.gameId)
             await nextStage(items.gameId)
             setCountdown(maxTime)
           }}
