@@ -66,9 +66,8 @@ export default function Stage() {
   useEffect(() => {
     addEventListener(
       "beforeunload",
-      (event) => {
-        event.preventDefault()
-        return (event.returnValue = "Are you sure you want to exit?")
+      async (event) => {
+        await setReady(items.gameId, items.name, true)
       },
       { capture: true }
     )
