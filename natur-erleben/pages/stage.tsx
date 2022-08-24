@@ -64,10 +64,14 @@ export default function Stage() {
   const [countdown, setCountdown] = useState(maxTime)
 
   useEffect(() => {
-    addEventListener("beforeunload", (event) => {
-      event.preventDefault()
-      return (event.returnValue = "Are you sure you want to exit?")
-    })
+    addEventListener(
+      "beforeunload",
+      (event) => {
+        event.preventDefault()
+        return (event.returnValue = "Are you sure you want to exit?")
+      },
+      { capture: true }
+    )
   }, [])
 
   return question != null ? (
