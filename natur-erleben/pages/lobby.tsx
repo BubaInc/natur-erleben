@@ -7,14 +7,12 @@ import { useEffect, useState } from "react"
 import RenderIf from "../components/RenderIf"
 import SpinnerButton from "../components/SpinnerButton"
 import { changeStage, watchPlayerList, watchStage } from "../util/Firebase"
-import handler from "../util/StorageHandler"
+import handler, { useItems } from "../util/StorageHandler"
 
 export default function Lobby() {
   const router = useRouter()
-  const [items, setItems] = useState<any>({})
   const [playerNames, setPlayerNames] = useState<string[]>([])
-  useEffect(() => setItems(handler.getItems()), [])
-  useEffect(() => {
+  const items = useItems((items) => {
     watchPlayerList(items.gameId, (snapshot) => {
       const data = snapshot.val()
       if (data != null) setPlayerNames(data.map((player: any) => player.name))
@@ -22,7 +20,7 @@ export default function Lobby() {
     watchStage(items.gameId, (snapshot) => {
       if (snapshot.val() == 1) router.push("/stage")
     })
-  }, [items])
+  })
 
   return (
     <Container maxWidth="sm">

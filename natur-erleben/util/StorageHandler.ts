@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react"
+
 type Field =
   | "isHost"
   | "name"
@@ -5,6 +7,15 @@ type Field =
   | "numberCorrect"
   | "stage"
   | "canAnswer"
+
+type Items = {
+  isHost: boolean
+  name: string
+  gameId: string
+  numberCorrect: number
+  stage: number
+  canAnswer: boolean
+}
 
 const setItem = (item: Field, value: string) =>
   window.localStorage.setItem(item, value)
@@ -41,3 +52,19 @@ const handler = {
 }
 
 export default handler
+
+export const useItems = (onItemsReady: (i: Items) => void) => {
+  const [items, setItems] = useState<Items>({
+    gameId: "",
+    name: "",
+    isHost: false,
+    numberCorrect: 0,
+    stage: 0,
+    canAnswer: false,
+  })
+  useEffect(() => setItems(handler.getItems()), [])
+  useEffect(() => {
+    if (items != undefined) onItemsReady(items)
+  }, [items])
+  return items
+}
