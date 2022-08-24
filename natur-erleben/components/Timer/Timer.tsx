@@ -16,7 +16,6 @@ export default function Timer({
       onTimeout()
     } else {
       const timer = setInterval(() => setCountdown(countdown - 1), 1000)
-      handler.setCountdown(countdown - 1)
       return () => clearInterval(timer)
     }
   }, [countdown])

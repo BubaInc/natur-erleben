@@ -21,7 +21,6 @@ import handler, { useItems } from "../util/StorageHandler"
 export default function Stage() {
   const items = useItems((items) => {
     if (items.stage != undefined) setStage(items.stage)
-    setCountdown(items.countdown)
     watchStage(items.gameId, async (snapshot) => {
       if (snapshot.val() > stage) {
         setStage(snapshot.val())
@@ -37,7 +36,6 @@ export default function Stage() {
         snapshot.val().filter((player: any) => player.name == items.name)[0]
           .ready
       )
-      console.log(snapshot.val())
       setEveryoneReady(
         !snapshot
           .val()
@@ -51,6 +49,7 @@ export default function Stage() {
   const [playerData, setPlayerData] = useState<any>([])
 
   const [stage, setStage] = useState(1)
+
   const question = stages[stage]
   const [answers, setAnswers] = useState<string[]>([])
   useEffect(() => setAnswers(shuffle(question.answers)), [stage])
@@ -63,6 +62,13 @@ export default function Stage() {
 
   const maxTime = 10
   const [countdown, setCountdown] = useState(maxTime)
+
+  useEffect(() => {
+    addEventListener("beforeunload", (event) => {
+      event.preventDefault()
+      return (event.returnValue = "Are you sure you want to exit?")
+    })
+  }, [])
 
   return question != null ? (
     <Container maxWidth="sm">
