@@ -27,7 +27,6 @@ export default function Stage() {
         setCountdown(maxTime)
         handler.setCanAnswer(true)
         setEveryoneReady(false)
-        await setReady(items.gameId, items.name, false)
       }
     })
     watchPlayerList(items.gameId, (snapshot) => {
