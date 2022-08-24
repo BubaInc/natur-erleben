@@ -9,6 +9,7 @@ import RenderIf from "../components/RenderIf"
 import SpinnerButton from "../components/SpinnerButton"
 import Timer from "../components/Timer"
 import {
+  increaseNumberCorrect,
   makeEveryoneUnready,
   nextStage,
   setReady,
@@ -80,11 +81,12 @@ export default function Stage() {
               key={i}
               color="secondary"
               disabled={iAmReady}
-              onClick={() => {
+              onClick={async () => {
                 setReady(items.gameId, items.name, true)
                 if (answer == question.right) {
                   setAnswerStatus("correct")
                   handler.increaseNumberCorrect()
+                  await increaseNumberCorrect(items.gameId, items.name)
                 } else {
                   setAnswerStatus("wrong")
                 }
