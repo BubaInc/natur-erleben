@@ -26,6 +26,7 @@ export default function Stage() {
         setAnswerStatus("none")
         setCountdown(maxTime)
         handler.setCanAnswer(true)
+        setEveryoneReady(false)
         await setReady(items.gameId, items.name, false)
       }
     })
