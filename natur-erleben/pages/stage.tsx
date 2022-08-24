@@ -90,7 +90,7 @@ export default function Stage() {
                 if (answer == question.right) {
                   setAnswerStatus("correct")
                   handler.increaseNumberCorrect()
-                  // increaseNumberCorrect(items.gameId, items.name)
+                  increaseNumberCorrect(items.gameId, items.name)
                 } else {
                   setAnswerStatus("wrong")
                 }
@@ -148,37 +148,37 @@ const stages: any = {
   2: {
     question: "Wie heißt der Vater von Nicki Lauda?",
     answers: ["Papa Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
-    right: "Mama Lauda",
+    right: "Papa Lauda",
   },
   3: {
     question: "Wie heißt der Bruder von Nicki Lauda?",
     answers: ["Bruder Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
-    right: "Mama Lauda",
+    right: "Bruder Lauda",
   },
   4: {
-    question: "Wie heißt der Bruder von Nicki Lauda?",
-    answers: ["Bruder Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
-    right: "Mama Lauda",
+    question: "Wie heißt der Schwager von Nicki Lauda?",
+    answers: ["Schwager Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
+    right: "Schwager Lauda",
   },
   5: {
-    question: "Wie heißt der Bruder von Nicki Lauda?",
-    answers: ["Bruder Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
-    right: "Mama Lauda",
+    question: "Wie heißt der Onkel von Nicki Lauda?",
+    answers: ["Onkel Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
+    right: "Onkel Lauda",
   },
   6: {
-    question: "Wie heißt der Bruder von Nicki Lauda?",
-    answers: ["Bruder Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
-    right: "Mama Lauda",
+    question: "Wie heißt der Opa von Nicki Lauda?",
+    answers: ["Opa Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
+    right: "Opa Lauda",
   },
   7: {
-    question: "Wie heißt der Bruder von Nicki Lauda?",
-    answers: ["Bruder Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
-    right: "Mama Lauda",
+    question: "Wie heißt die Tante von Nicki Lauda?",
+    answers: ["Tante Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
+    right: "Tante Lauda",
   },
   8: {
-    question: "Wie heißt der Bruder von Nicki Lauda?",
-    answers: ["Bruder Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
-    right: "Mama Lauda",
+    question: "Wie heißt der Cousin von Nicki Lauda?",
+    answers: ["Cousin Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
+    right: "Cousin Lauda",
   },
 }
 
