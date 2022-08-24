@@ -132,6 +132,31 @@ const stages: any = {
     answers: ["Bruder Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
     right: "Mama Lauda",
   },
+  4: {
+    question: "Wie heißt der Bruder von Nicki Lauda?",
+    answers: ["Bruder Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
+    right: "Mama Lauda",
+  },
+  5: {
+    question: "Wie heißt der Bruder von Nicki Lauda?",
+    answers: ["Bruder Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
+    right: "Mama Lauda",
+  },
+  6: {
+    question: "Wie heißt der Bruder von Nicki Lauda?",
+    answers: ["Bruder Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
+    right: "Mama Lauda",
+  },
+  7: {
+    question: "Wie heißt der Bruder von Nicki Lauda?",
+    answers: ["Bruder Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
+    right: "Mama Lauda",
+  },
+  8: {
+    question: "Wie heißt der Bruder von Nicki Lauda?",
+    answers: ["Bruder Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
+    right: "Mama Lauda",
+  },
 }
 
 const shuffle = (a: any[]) => {
