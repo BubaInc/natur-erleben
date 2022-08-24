@@ -4,6 +4,7 @@ import List from "@mui/material/List"
 import ListItemButton from "@mui/material/ListItemButton"
 import ListItemText from "@mui/material/ListItemText"
 import Typography from "@mui/material/Typography"
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import RenderIf from "../components/RenderIf"
 import SpinnerButton from "../components/SpinnerButton"
@@ -19,10 +20,13 @@ import {
 import handler, { useItems } from "../util/StorageHandler"
 
 export default function Stage() {
+  const router = useRouter()
   const items = useItems((items) => {
     if (items.stage != undefined) setStage(items.stage)
     watchStage(items.gameId, async (snapshot) => {
-      if (snapshot.val() > stage) {
+      if (stages[snapshot.val()] == undefined) {
+        router.push("/result")
+      } else if (snapshot.val() > stage) {
         setStage(snapshot.val())
         setAnswerStatus("none")
         setCountdown(maxTime)
