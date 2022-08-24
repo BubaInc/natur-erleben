@@ -160,7 +160,7 @@ export const increaseNumberCorrect = async (gameId: string, name: string) => {
   const newData = data.map((player: any) => {
     return {
       name: player.name,
-      ready: player.ready,
+      ready: true,
       numberCorrect: player.numberCorrect + 1,
     }
   })
