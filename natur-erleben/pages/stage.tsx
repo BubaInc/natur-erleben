@@ -113,8 +113,8 @@ export default function Stage() {
         <List>
           {[...playerData]
             .sort((a: any, b: any) => b.numberCorrect - a.numberCorrect)
-            .map((player: any) => (
-              <ListItemText>
+            .map((player: any, i: number) => (
+              <ListItemText key={i}>
                 {player.name + " " + player.numberCorrect}
               </ListItemText>
             ))}
