@@ -20,12 +20,11 @@ export default function Stage() {
   const items = useItems((items) => {
     if (items.stage != undefined) setStage(items.stage)
     watchStage(items.gameId, async (snapshot) => {
-      if (stage == snapshot.val() - 1) {
-        setStage(stage + 1)
+      if (snapshot.val() > stage) {
+        setStage(snapshot.val())
         setAnswerStatus("none")
         setCountdown(maxTime)
         handler.setCanAnswer(true)
-        console.log(snapshot.val())
         await setReady(items.gameId, items.name, false)
       }
     })
@@ -41,7 +40,6 @@ export default function Stage() {
   })
 
   const [stage, setStage] = useState(1)
-  console.log(stage)
   const question = stages[stage]
   const [answers, setAnswers] = useState<string[]>([])
   useEffect(() => setAnswers(shuffle(question.answers)), [stage])
