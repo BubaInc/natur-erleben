@@ -102,7 +102,7 @@ export default function Stage() {
               disabled={iAmReady}
               onClick={async () => {
                 setReady(items.gameId, items.name, true)
-                if (answer == question.right) {
+                if (answer == question.correct) {
                   setAnswerStatus("correct")
                   handler.increaseNumberCorrect()
                   increaseNumberCorrect(items.gameId, items.name)
@@ -156,44 +156,164 @@ export default function Stage() {
 
 const stages: any = {
   1: {
-    question: "Wie heißt die Mutter von Nicki Lauda?",
-    answers: ["Mama Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
-    right: "Mama Lauda",
+    question: "In was lässt sich ein Ahornblatt unterteilen?",
+    answers: ["Lappen", "Finger", "Spitzen", "Wischer"],
+    correct: "Lappen",
   },
+
   2: {
-    question: "Wie heißt der Vater von Nicki Lauda?",
-    answers: ["Papa Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
-    right: "Papa Lauda",
+    question: "Ist der Ahorn giftig?",
+    answers: ["Ja", "Nur für Nagetiere", "Nur für Pferde & Esel", "Nein"],
+    correct: "Nur für Pferde & Esel",
   },
+
   3: {
-    question: "Wie heißt der Bruder von Nicki Lauda?",
-    answers: ["Bruder Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
-    right: "Bruder Lauda",
+    question: "Wo ist der Ginkgo beheimatet? Dort ist er sogar Nationalbaum!",
+    answers: ["China", "Thailand", "Dänemark", "Madagaskar"],
+    correct: "China",
   },
+
   4: {
-    question: "Wie heißt der Schwager von Nicki Lauda?",
-    answers: ["Schwager Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
-    right: "Schwager Lauda",
+    question:
+      "Bei was soll der Ginkgo laut traditioneller chinesischer Medizin helfen?",
+    answers: ["Rückenschmerzen", "Gedächtnisprobleme", "Haarausfall", "Karies"],
+    correct: "Gedächtnisprobleme",
   },
+
   5: {
-    question: "Wie heißt der Onkel von Nicki Lauda?",
-    answers: ["Onkel Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
-    right: "Onkel Lauda",
+    question: "Wieso werden in Parks fast nur männliche Ginkgos angebaut?",
+    answers: [
+      "die Weibchen werden nur maximal 1m hoch",
+      "die Weibchen sind nicht frosthart",
+      "die Früchte der Weibchen stinken",
+      "die Früchte der Weibchen sind giftig",
+    ],
+    correct: "die Früchte der Weibchen stinken",
   },
+
   6: {
-    question: "Wie heißt der Opa von Nicki Lauda?",
-    answers: ["Opa Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
-    right: "Opa Lauda",
+    question: "Ist die Rosskastanie essbar?",
+    answers: [
+      "Ja",
+      "Ja, jedoch ist sie ungenießbar",
+      "Nur im gekochten Zustand",
+      "Nein, sie ist giftig",
+    ],
+    correct: "Nein, sie ist giftig",
   },
+
   7: {
-    question: "Wie heißt die Tante von Nicki Lauda?",
-    answers: ["Tante Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
-    right: "Tante Lauda",
+    question: "Was kann man aus Kastanien herstellen?",
+    answers: ["Waschmittel", "Hautcreme", "Zahnpasta", "Deodorant"],
+    correct: "Waschmittel",
   },
+
   8: {
-    question: "Wie heißt der Cousin von Nicki Lauda?",
-    answers: ["Cousin Lauda", "rgehouip", "sjzt", "hvfrgzyd"],
-    right: "Cousin Lauda",
+    question: "Sind Zieräpfel giftig?",
+    answers: ["Ja", "Nein, jedoch ja für Haustiere", "Nein"],
+    correct: "Nein",
+  },
+
+  9: {
+    question:
+      "In welchem Jahrhundert wurde die älteste Apfelsorte, der Edelborsdorfer dokumentiert?",
+    answers: [
+      "1. Jahrhundert",
+      "6. Jahrhundert",
+      "12. Jahrhundert",
+      "18. Jahrhundert",
+    ],
+    correct: "12. Jahrhundert",
+  },
+
+  10: {
+    question:
+      "Welchen Nahrungsmitteln schauen die Samen/Früchte der Robinie ähnlich?",
+    answers: ["Walnüsse", "Bohnenhülsen", "Kirschen", "Äpfeln"],
+    correct: "Bohnenhülsen",
+  },
+
+  11: {
+    question: "Die Pflanzung der Robinie ist umstritten. Wieso?",
+    answers: [
+      "Sie ist sehr schädlingsanfällig",
+      "Sie bietet kaum Nahrung für Insekten",
+      "Sie braucht extremst viel Dünger, um überhaupt zu wachsen",
+      "Sie breitet sich aus & senkt die Artenvielfalt (=>invasiv)",
+    ],
+    correct: "Sie breitet sich aus & senkt die Artenvielfalt (=>invasiv)",
+  },
+
+  12: {
+    question:
+      "Wie andere Hülsenfrüchtler lebt die Robinie in Symbiose mit Knöllchenbakterien. Wieso?",
+    answers: [
+      "um Feinde abzuwehren",
+      "um witterungsbeständiger zu sein",
+      "um sich selbst zu Düngen",
+      "um Insekten anzulocken",
+    ],
+    correct: "um sich selbst zu Düngen",
+  },
+
+  13: {
+    question: "Was wurde aus den Früchten der Eberesche hergestellt?",
+    answers: ["Süßstoff", "Gift gegen Schädlinge", "Farbe", "Duftstoffe"],
+    correct: "Süßstoff",
+  },
+
+  14: {
+    question: "Woher kommen die Namen Vogelbeere bzw. Eberesche? (2 Anworten)",
+    answers: [
+      "Sie ist verwandt mit der Esche",
+      "Die Blätter ähneln denen der Esche",
+      "Vögel lieben die Früchte",
+      "Die Beeren sind höchst giftig für Vögel",
+    ],
+    correct: ["Die Blätter ähneln denen der Esche", "Vögel lieben die Früchte"],
+  },
+
+  15: {
+    question: "Sind Vogelbeeren giftig?",
+    answers: [
+      "Ja, jedoch sind sie sicher für Haustiere",
+      "Nein, jedoch ja für Haustiere",
+    ],
+    correct: "Nein, jedoch ja für Haustiere",
+  },
+
+  16: {
+    question: "Die Linde ist für Insekten sehr wichtig. Wieso?",
+    answers: [
+      "sie ist ein Sommerblüher, was sehr selten ist",
+      "sie hat 10-mal so viele Blüten wie die meisten anderen Laubbäume",
+      "sie zieht viele seltene Arten an",
+    ],
+    correct: "sie ist ein Sommerblüher, was sehr selten ist",
+  },
+
+  17: {
+    question: "Wobei hilft Lindenblütentee?",
+    answers: [
+      "Bauchschmerzen",
+      "Erkältung",
+      "Hustenreiz",
+      "Konzentrationsschwächen",
+    ],
+    correct: "Erkältung",
+  },
+
+  18: {
+    question:
+      "Die Dorflinde, welche früher das Zentrum eines Dorfs darstellte, hatte auch folgende Namen:",
+    answers: ["Festbaum", "Gerichtslinde", "Hochzeitslinde", "Tanzlinde"],
+    correct: ["Gerichtslinde", "Tanzlinde"],
+  },
+
+  19: {
+    question: "Was wurde früher in Notzeiten aus Eicheln hergestellt?",
+    answers: ["Seife", "Öl", "Kaffee", "Mehl"],
+    correct: ["Kaffee", "Mehl"],
   },
 }
 
