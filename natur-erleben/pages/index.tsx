@@ -15,7 +15,7 @@ import {
   isPlayerNameAvailable,
   joinGame,
 } from "../util/Firebase"
-import handler, { useItems } from "../util/StorageHandler"
+import handler from "../util/StorageHandler"
 
 const Home: NextPage = () => {
   const [playerName, setPlayerName] = useState("")
@@ -25,6 +25,7 @@ const Home: NextPage = () => {
   const router = useRouter()
   const [invalidGameId, setInvalidGameId] = useState(false)
   const [invalidPlayerName, setInvalidPlayerName] = useState(false)
+  const [reconnect, setReconnect] = useState("")
 
   useEffect(() => {
     const gameId = window.localStorage.getItem("gameId")
@@ -32,7 +33,26 @@ const Home: NextPage = () => {
       setReconnect(gameId)
     }
   }, [])
-  const [reconnect, setReconnect] = useState("")
+
+  const onCreateGameClick = async () => {
+    if (createMode) {
+      const id = await createGame(playerName)
+      handler.init(playerName, id, true)
+      router.push("/lobby")
+    } else {
+      if (!(await isGameIdValid(gameId))) {
+        setInvalidGameId(true)
+        return
+      }
+      if (!(await isPlayerNameAvailable(playerName, gameId))) {
+        setInvalidPlayerName(true)
+        return
+      }
+      await joinGame(playerName, gameId)
+      handler.init(playerName, gameId, false)
+      router.push("/lobby")
+    }
+  }
 
   return (
     <Container maxWidth="sm">
@@ -97,25 +117,7 @@ const Home: NextPage = () => {
             <Grid item xs={12}>
               <SpinnerButton
                 fullWidth
-                job={async () => {
-                  if (createMode) {
-                    const id = await createGame(playerName)
-                    handler.init(playerName, id, true)
-                    router.push("/lobby")
-                  } else {
-                    if (!(await isGameIdValid(gameId))) {
-                      setInvalidGameId(true)
-                      return
-                    }
-                    if (!(await isPlayerNameAvailable(playerName, gameId))) {
-                      setInvalidPlayerName(true)
-                      return
-                    }
-                    await joinGame(playerName, gameId)
-                    handler.init(playerName, gameId, false)
-                    router.push("/lobby")
-                  }
-                }}
+                job={onCreateGameClick}
                 disabled={
                   createMode
                     ? playerName == ""

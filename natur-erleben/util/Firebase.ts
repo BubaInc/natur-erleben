@@ -108,9 +108,9 @@ export const isPlayerNameAvailable = async (
   playerName: string,
   gameId: string
 ) => {
-  const players = (
-    await get(ref(database, "games/" + gameId + "/players"))
-  ).val()
+  const players = (await get(ref(database, "games/" + gameId + "/players")))
+    .val()
+    .map((player: any) => player.name)
   return !players.includes(playerName)
 }
 
