@@ -73,7 +73,8 @@ export default function Stage() {
       "beforeunload",
       async (event) => {
         console.log("Buba1")
-        await setReady(items.gameId, items.name, true)
+        // await setReady(items.gameId, items.name, true)
+        handler.setCanAnswer(false)
         console.log("Buba2")
       },
       { capture: true }
