@@ -72,7 +72,9 @@ export default function Stage() {
     addEventListener(
       "beforeunload",
       async (event) => {
+        console.log("Buba1")
         await setReady(items.gameId, items.name, true)
+        console.log("Buba2")
       },
       { capture: true }
     )

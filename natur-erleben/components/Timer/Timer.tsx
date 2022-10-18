@@ -1,6 +1,5 @@
 import Typography from "@mui/material/Typography"
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
-import handler from "../../util/StorageHandler"
+import { Dispatch, SetStateAction, useEffect } from "react"
 
 export default function Timer({
   countdown,
