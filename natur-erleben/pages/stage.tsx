@@ -59,7 +59,8 @@ export default function Stage() {
   return question != null ? (
     <Container maxWidth="sm">
       <Typography variant="h2" sx={{ mb: 2 }}>
-        {question.question}" "{myPlayerData.answerStatus}
+        {question.question}
+        {myPlayerData.answerStatus}
       </Typography>
       <RenderIf condition={myPlayerData.answerStatus == "none"}>
         <Timer
