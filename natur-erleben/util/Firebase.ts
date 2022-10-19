@@ -15,8 +15,49 @@ const firebaseConfig = {
     "https://natur-erleben-221d4-default-rtdb.europe-west1.firebasedatabase.app/",
 }
 
+export type GameData = {
+  gameId: string
+  host: string
+  stage: number
+  players: Player[]
+}
+
+export type Player = {
+  name: string
+  numberCorrect: number
+  ready: boolean
+}
+
+export const defaultGameData: GameData = {
+  gameId: "",
+  host: "",
+  stage: 0,
+  players: [],
+}
+
 const app = initializeApp(firebaseConfig)
 const database = getDatabase(app)
+
+export const downloadGameData = async (gameId: string): Promise<GameData> => {
+  const gameRef = ref(database, "games/" + gameId)
+  const data = (await get(gameRef)).val()
+  return data
+}
+
+export const uploadGameData = async (gameId: string, gameData: GameData) => {
+  const gameRef = ref(database, "games/" + gameId)
+  await set(gameRef, gameData)
+}
+
+export const watchGameData = async (
+  gameId: string,
+  listener: (gameData: GameData) => unknown
+) => {
+  const gameRef = ref(database, "games/" + gameId)
+  onValue(gameRef, (snapshot) => {
+    if (snapshot.val() != null) listener(snapshot.val() as GameData)
+  })
+}
 
 const getGameIds = async () => {
   const dbRef = ref(database)
@@ -41,6 +82,7 @@ export const createGame = async (host: string) => {
   // upload new game entry
   await set(ref(database, "games/" + id), {
     host: host,
+    gameId: id.toString(),
     players: [{ name: host, ready: false, numberCorrect: 0 }],
     stage: 0,
   })

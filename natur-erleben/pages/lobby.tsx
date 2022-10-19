@@ -6,36 +6,53 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import RenderIf from "../components/RenderIf"
 import SpinnerButton from "../components/SpinnerButton"
-import { changeStage, watchPlayerList, watchStage } from "../util/Firebase"
-import handler, { useItems } from "../util/StorageHandler"
+import {
+  changeStage,
+  defaultGameData,
+  downloadGameData,
+  GameData,
+  Player,
+  watchGameData,
+} from "../util/Firebase"
+import handler from "../util/StorageHandler"
 
 export default function Lobby() {
   const router = useRouter()
-  const [playerNames, setPlayerNames] = useState<string[]>([])
-  const items = useItems((items) => {
-    watchPlayerList(items.gameId, (snapshot) => {
-      const data = snapshot.val()
-      if (data != null) setPlayerNames(data.map((player: any) => player.name))
-    })
-    watchStage(items.gameId, (snapshot) => {
-      if (snapshot.val() == 1) router.push("/stage")
-    })
-  })
+  const [players, setPlayers] = useState<Player[]>([])
+  const [gameData, setGameData] = useState<GameData>(defaultGameData)
+
+  useEffect(() => {
+    ;(async () => {
+      const _gameData = await downloadGameData(handler.getItems().gameId)
+      setGameData(_gameData)
+      watchGameData(handler.getItems().gameId, (data) => {
+        setPlayers(data.players)
+        if (data.stage == 1) router.push("/stage")
+      })
+    })()
+    // watchPlayerList(gameData.gameId, (snapshot) => {
+    //   const data = snapshot.val()
+    //   if (data != null) setPlayerNames(data.map((player: any) => player.name))
+    // })
+    // watchStage(gameData.gameId, (snapshot) => {
+    //   if (snapshot.val() == 1) router.push("/stage")
+    // })
+  }, [])
 
   return (
     <Container maxWidth="sm">
       <Typography variant="h2" sx={{ mb: 2 }}>
-        ID: {items.gameId}
+        ID: {gameData.gameId}
       </Typography>
       <List>
-        {playerNames.map((name, i) => {
-          return <ListItemText key={i}>{name}</ListItemText>
+        {players.map((player, i) => {
+          return <ListItemText key={i}>{player.name}</ListItemText>
         })}
       </List>
-      <RenderIf condition={items.isHost}>
+      <RenderIf condition={gameData.host == handler.getItems().name}>
         <SpinnerButton
-          disabled={playerNames.length <= 1}
-          job={() => changeStage(items.gameId, 1)}
+          disabled={players.length <= 1}
+          job={() => changeStage(gameData.gameId, 1)}
         >
           Spiel starten
         </SpinnerButton>

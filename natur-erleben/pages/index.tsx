@@ -37,7 +37,7 @@ const Home: NextPage = () => {
   const onCreateGameClick = async () => {
     if (createMode) {
       const id = await createGame(playerName)
-      handler.init(playerName, id, true)
+      handler.init(playerName, id)
       router.push("/lobby")
     } else {
       if (!(await isGameIdValid(gameId))) {
@@ -49,7 +49,7 @@ const Home: NextPage = () => {
         return
       }
       await joinGame(playerName, gameId)
-      handler.init(playerName, gameId, false)
+      handler.init(playerName, gameId)
       router.push("/lobby")
     }
   }
