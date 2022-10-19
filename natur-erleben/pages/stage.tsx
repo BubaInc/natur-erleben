@@ -42,6 +42,7 @@ export default function Stage() {
           setAnswerStatus(gameData.gameId, cachedName, "none")
           setCountdown(maxTime)
         }
+        console.log("Buba")
       })
       setGameData(_gameData)
     })
