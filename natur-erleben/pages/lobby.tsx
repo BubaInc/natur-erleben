@@ -20,16 +20,17 @@ export default function Lobby() {
   const router = useRouter()
   const [players, setPlayers] = useState<Player[]>([])
   const [gameData, setGameData] = useState<GameData>(defaultGameData)
+  const [cachedName, setCachedName] = useState("")
 
   useEffect(() => {
-    ;(async () => {
-      const _gameData = await downloadGameData(handler.getItems().gameId)
+    setCachedName(handler.getItems().name)
+    downloadGameData(handler.getItems().gameId).then((_gameData) => {
       setGameData(_gameData)
       watchGameData(handler.getItems().gameId, (data) => {
         setPlayers(data.players)
         if (data.stage == 1) router.push("/stage")
       })
-    })()
+    })
     // watchPlayerList(gameData.gameId, (snapshot) => {
     //   const data = snapshot.val()
     //   if (data != null) setPlayerNames(data.map((player: any) => player.name))
@@ -49,7 +50,7 @@ export default function Lobby() {
           return <ListItemText key={i}>{player.name}</ListItemText>
         })}
       </List>
-      <RenderIf condition={gameData.host == handler.getItems().name}>
+      <RenderIf condition={gameData.host == cachedName}>
         <SpinnerButton
           disabled={players.length <= 1}
           job={() => changeStage(gameData.gameId, 1)}
