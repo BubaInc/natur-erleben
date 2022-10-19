@@ -37,8 +37,10 @@ export default function Stage() {
       watchGameData(handler.getItems().gameId, (data) => {
         // Go to result page when there is no stage left
         if (stages[data.stage] == undefined) router.push("/result")
-        else if (data.stage > gameData.stage)
+        else if (data.stage > gameData.stage) {
           setAnswerStatus(gameData.gameId, cachedName, "none")
+          setCountdown(maxTime)
+        }
       })
       setGameData(_gameData)
     })
@@ -48,7 +50,7 @@ export default function Stage() {
     gameData.players.filter((player) => !player.ready).length == 0
 
   const question = stages[gameData.stage]
-  const answers = shuffle(question.answers)
+  const answers = shuffle(question ? question.answers : [])
 
   const maxTime = 10
   const [countdown, setCountdown] = useState(maxTime)
@@ -63,11 +65,7 @@ export default function Stage() {
           countdown={countdown}
           setCountdown={setCountdown}
           onTimeout={async () => {
-            await setAnswerStatus(
-              gameData.gameId,
-              cachedName,
-              myPlayerData.answerStatus
-            )
+            await setAnswerStatus(gameData.gameId, cachedName, "timeout")
             await setReady(gameData.gameId, cachedName, true)
           }}
         />
