@@ -38,6 +38,7 @@ export default function Stage() {
         // Go to result page when there is no stage left
         if (stages[data.stage - 1] == undefined) router.push("/result")
         else if (data.stage > gameData.stage) {
+          // Next stage has been selected
           setAnswerStatus(gameData.gameId, cachedName, "none")
           setCountdown(maxTime)
         }
@@ -58,7 +59,7 @@ export default function Stage() {
   return question != null ? (
     <Container maxWidth="sm">
       <Typography variant="h2" sx={{ mb: 2 }}>
-        {question.question}
+        {question.question}" "{myPlayerData.answerStatus}
       </Typography>
       <RenderIf condition={myPlayerData.answerStatus == "none"}>
         <Timer
