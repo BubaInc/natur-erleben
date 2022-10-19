@@ -48,8 +48,7 @@ export default function Stage() {
     gameData.players.filter((player) => !player.ready).length == 0
 
   const question = stages[gameData.stage]
-  const [answers, setAnswers] = useState<string[]>([])
-  useEffect(() => setAnswers(shuffle(question.answers)), [gameData.stage])
+  const answers = shuffle(question.answers)
 
   const maxTime = 10
   const [countdown, setCountdown] = useState(maxTime)
