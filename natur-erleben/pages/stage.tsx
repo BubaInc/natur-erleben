@@ -36,7 +36,7 @@ export default function Stage() {
     downloadGameData(handler.getItems().gameId).then((_gameData) => {
       watchGameData(handler.getItems().gameId, (data) => {
         // Go to result page when there is no stage left
-        if (stages[data.stage] == undefined) router.push("/result")
+        if (stages[data.stage - 1] == undefined) router.push("/result")
         else if (data.stage > gameData.stage) {
           setAnswerStatus(gameData.gameId, cachedName, "none")
           setCountdown(maxTime)
@@ -49,8 +49,8 @@ export default function Stage() {
   const everyoneReady =
     gameData.players.filter((player) => !player.ready).length == 0
 
-  const question = stages[gameData.stage]
-  const answers = shuffle(question ? question.answers : [])
+  const question = stages[gameData.stage - 1]
+  const answers = question ? question.answers : []
 
   const maxTime = 10
   const [countdown, setCountdown] = useState(maxTime)
@@ -132,33 +132,35 @@ export default function Stage() {
   )
 }
 
-const stages: any = {
-  1: {
+type Question = {
+  question: string
+  answers: string[]
+  correct: string[] | string
+}
+
+const stages: Question[] = [
+  {
     question: "In was lässt sich ein Ahornblatt unterteilen?",
     answers: ["Lappen", "Finger", "Spitzen", "Wischer"],
     correct: "Lappen",
   },
-
-  2: {
+  {
     question: "Ist der Ahorn giftig?",
     answers: ["Ja", "Nur für Nagetiere", "Nur für Pferde & Esel", "Nein"],
     correct: "Nur für Pferde & Esel",
   },
-
-  3: {
+  {
     question: "Wo ist der Ginkgo beheimatet? Dort ist er sogar Nationalbaum!",
     answers: ["China", "Thailand", "Dänemark", "Madagaskar"],
     correct: "China",
   },
-
-  4: {
+  {
     question:
       "Bei was soll der Ginkgo laut traditioneller chinesischer Medizin helfen?",
     answers: ["Rückenschmerzen", "Gedächtnisprobleme", "Haarausfall", "Karies"],
     correct: "Gedächtnisprobleme",
   },
-
-  5: {
+  {
     question: "Wieso werden in Parks fast nur männliche Ginkgos angebaut?",
     answers: [
       "die Weibchen werden nur maximal 1m hoch",
@@ -168,8 +170,7 @@ const stages: any = {
     ],
     correct: "die Früchte der Weibchen stinken",
   },
-
-  6: {
+  {
     question: "Ist die Rosskastanie essbar?",
     answers: [
       "Ja",
@@ -179,20 +180,17 @@ const stages: any = {
     ],
     correct: "Nein, sie ist giftig",
   },
-
-  7: {
+  {
     question: "Was kann man aus Kastanien herstellen?",
     answers: ["Waschmittel", "Hautcreme", "Zahnpasta", "Deodorant"],
     correct: "Waschmittel",
   },
-
-  8: {
+  {
     question: "Sind Zieräpfel giftig?",
     answers: ["Ja", "Nein, jedoch ja für Haustiere", "Nein"],
     correct: "Nein",
   },
-
-  9: {
+  {
     question:
       "In welchem Jahrhundert wurde die älteste Apfelsorte, der Edelborsdorfer dokumentiert?",
     answers: [
@@ -203,15 +201,13 @@ const stages: any = {
     ],
     correct: "12. Jahrhundert",
   },
-
-  10: {
+  {
     question:
       "Welchen Nahrungsmitteln schauen die Samen/Früchte der Robinie ähnlich?",
     answers: ["Walnüsse", "Bohnenhülsen", "Kirschen", "Äpfeln"],
     correct: "Bohnenhülsen",
   },
-
-  11: {
+  {
     question: "Die Pflanzung der Robinie ist umstritten. Wieso?",
     answers: [
       "Sie ist sehr schädlingsanfällig",
@@ -221,8 +217,7 @@ const stages: any = {
     ],
     correct: "Sie breitet sich aus & senkt die Artenvielfalt (=>invasiv)",
   },
-
-  12: {
+  {
     question:
       "Wie andere Hülsenfrüchtler lebt die Robinie in Symbiose mit Knöllchenbakterien. Wieso?",
     answers: [
@@ -233,14 +228,12 @@ const stages: any = {
     ],
     correct: "um sich selbst zu Düngen",
   },
-
-  13: {
+  {
     question: "Was wurde aus den Früchten der Eberesche hergestellt?",
     answers: ["Süßstoff", "Gift gegen Schädlinge", "Farbe", "Duftstoffe"],
     correct: "Süßstoff",
   },
-
-  14: {
+  {
     question: "Woher kommen die Namen Vogelbeere bzw. Eberesche? (2 Anworten)",
     answers: [
       "Sie ist verwandt mit der Esche",
@@ -250,8 +243,7 @@ const stages: any = {
     ],
     correct: ["Die Blätter ähneln denen der Esche", "Vögel lieben die Früchte"],
   },
-
-  15: {
+  {
     question: "Sind Vogelbeeren giftig?",
     answers: [
       "Ja, jedoch sind sie sicher für Haustiere",
@@ -259,8 +251,7 @@ const stages: any = {
     ],
     correct: "Nein, jedoch ja für Haustiere",
   },
-
-  16: {
+  {
     question: "Die Linde ist für Insekten sehr wichtig. Wieso?",
     answers: [
       "sie ist ein Sommerblüher, was sehr selten ist",
@@ -269,8 +260,7 @@ const stages: any = {
     ],
     correct: "sie ist ein Sommerblüher, was sehr selten ist",
   },
-
-  17: {
+  {
     question: "Wobei hilft Lindenblütentee?",
     answers: [
       "Bauchschmerzen",
@@ -280,20 +270,18 @@ const stages: any = {
     ],
     correct: "Erkältung",
   },
-
-  18: {
+  {
     question:
       "Die Dorflinde, welche früher das Zentrum eines Dorfs darstellte, hatte auch folgende Namen:",
     answers: ["Festbaum", "Gerichtslinde", "Hochzeitslinde", "Tanzlinde"],
     correct: ["Gerichtslinde", "Tanzlinde"],
   },
-
-  19: {
+  {
     question: "Was wurde früher in Notzeiten aus Eicheln hergestellt?",
     answers: ["Seife", "Öl", "Kaffee", "Mehl"],
     correct: ["Kaffee", "Mehl"],
   },
-}
+]
 
 const shuffle = (a: any[]) => {
   var j, x, i
