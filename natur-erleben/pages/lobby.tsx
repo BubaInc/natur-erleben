@@ -31,13 +31,6 @@ export default function Lobby() {
         if (data.stage == 1) router.push("/stage")
       })
     })
-    // watchPlayerList(gameData.gameId, (snapshot) => {
-    //   const data = snapshot.val()
-    //   if (data != null) setPlayerNames(data.map((player: any) => player.name))
-    // })
-    // watchStage(gameData.gameId, (snapshot) => {
-    //   if (snapshot.val() == 1) router.push("/stage")
-    // })
   }, [])
 
   return (

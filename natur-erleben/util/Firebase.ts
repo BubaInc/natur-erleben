@@ -26,6 +26,7 @@ export type Player = {
   name: string
   numberCorrect: number
   ready: boolean
+  answerStatus: "none" | "correct" | "wrong" | "timeout"
 }
 
 export const defaultGameData: GameData = {
@@ -73,6 +74,12 @@ const getGameIds = async () => {
 }
 
 export const createGame = async (host: string) => {
+  const newPlayer: Player = {
+    name: host,
+    numberCorrect: 0,
+    ready: false,
+    answerStatus: "none",
+  }
   // get an available game id
   const ids = await getGameIds()
   let id = ""
@@ -83,16 +90,37 @@ export const createGame = async (host: string) => {
   await set(ref(database, "games/" + id), {
     host: host,
     gameId: id.toString(),
-    players: [{ name: host, ready: false, numberCorrect: 0 }],
+    players: [newPlayer],
     stage: 0,
   })
   return id
 }
 
+export const setAnswerStatus = async (
+  gameId: string,
+  playerName: string,
+  answerStatus: string
+) => {
+  const playersRef = ref(database, "games/" + gameId + "/players")
+  const data = (await get(playersRef)).val()
+  const newData = data.map((player: any) => {
+    if (player.name == playerName)
+      return Object.assign(player, { answerStatus: answerStatus })
+    else return player
+  })
+  await set(playersRef, newData)
+}
+
 export const joinGame = async (playerName: string, gameId: string) => {
   const playersRef = ref(database, "games/" + gameId + "/players")
   const data = (await get(playersRef)).val()
-  data.push({ name: playerName, ready: false, numberCorrect: 0 })
+  const newPlayer: Player = {
+    name: playerName,
+    numberCorrect: 0,
+    ready: false,
+    answerStatus: "none",
+  }
+  data.push(newPlayer)
   await set(playersRef, data)
 }
 
@@ -178,7 +206,7 @@ export const setReady = async (
   const playersRef = ref(database, "games/" + gameId + "/players")
   const players = (await get(playersRef)).val()
   players.forEach((player: any, i: number) => {
-    if (player.name == name) players[i].ready = true
+    if (player.name == name) players[i].ready = ready
   })
   await set(playersRef, players)
 }

@@ -10,151 +10,129 @@ import RenderIf from "../components/RenderIf"
 import SpinnerButton from "../components/SpinnerButton"
 import Timer from "../components/Timer"
 import {
+  defaultGameData,
+  downloadGameData,
+  GameData,
   increaseNumberCorrect,
   makeEveryoneUnready,
   nextStage,
+  Player,
+  setAnswerStatus,
   setReady,
-  watchPlayerList,
-  watchStage,
+  watchGameData,
 } from "../util/Firebase"
 import handler from "../util/StorageHandler"
 
 export default function Stage() {
-  // const router = useRouter()
-  // const items = useItems((items) => {
-  //   if (items.stage != undefined) setStage(items.stage)
-  //   watchStage(items.gameId, async (snapshot) => {
-  //     if (snapshot.val() == undefined) return
-  //     if (stages[snapshot.val()] == undefined) {
-  //       router.push("/result")
-  //     } else if (snapshot.val() > stage) {
-  //       setStage(snapshot.val())
-  //       setAnswerStatus("none")
-  //       setCountdown(maxTime)
-  //       handler.setCanAnswer(true)
-  //       setEveryoneReady(false)
-  //     }
-  //   })
-  //   watchPlayerList(items.gameId, (snapshot) => {
-  //     if (snapshot.val() == null) return
-  //     setIAmReady(
-  //       snapshot.val().filter((player: any) => player.name == items.name)[0]
-  //         .ready
-  //     )
-  //     setEveryoneReady(
-  //       !snapshot
-  //         .val()
-  //         .map((player: any) => player.ready)
-  //         .includes(false)
-  //     )
-  //     setPlayerData(snapshot.val())
-  //   })
-  // })
+  const router = useRouter()
+  const [gameData, setGameData] = useState<GameData>(defaultGameData)
+  const [cachedName, setCachedName] = useState("")
+  const myPlayerData = gameData.players.filter(
+    (player) => player.name == cachedName
+  )[0]
 
-  // const [playerData, setPlayerData] = useState<any>([])
+  useEffect(() => {
+    setCachedName(handler.getItems().name)
+    downloadGameData(handler.getItems().gameId).then((_gameData) => {
+      watchGameData(handler.getItems().gameId, (data) => {
+        // Go to result page when there is no stage left
+        if (stages[data.stage] == undefined) router.push("/result")
+        else if (data.stage > gameData.stage)
+          setAnswerStatus(gameData.gameId, cachedName, "none")
+      })
+      setGameData(_gameData)
+    })
+  }, [])
 
-  // const [stage, setStage] = useState(1)
+  const everyoneReady =
+    gameData.players.filter((player) => !player.ready).length == 0
 
-  // const question = stages[stage]
-  // const [answers, setAnswers] = useState<string[]>([])
-  // useEffect(() => setAnswers(shuffle(question.answers)), [stage])
+  const question = stages[gameData.stage]
+  const [answers, setAnswers] = useState<string[]>([])
+  useEffect(() => setAnswers(shuffle(question.answers)), [gameData.stage])
 
-  // type AnswerStatus = "none" | "correct" | "wrong" | "timeout"
-  // const [answerStatus, setAnswerStatus] = useState<AnswerStatus>("none")
+  const maxTime = 10
+  const [countdown, setCountdown] = useState(maxTime)
 
-  // const [everyoneReady, setEveryoneReady] = useState(false)
-  // const [iAmReady, setIAmReady] = useState(false)
-
-  // const maxTime = 10
-  // const [countdown, setCountdown] = useState(maxTime)
-
-  // useEffect(() => {
-  //   addEventListener(
-  //     "beforeunload",
-  //     async (event) => {
-  //       console.log("Buba1")
-  //       // await setReady(items.gameId, items.name, true)
-  //       handler.setCanAnswer(false)
-  //       console.log("Buba2")
-  //     },
-  //     { capture: true }
-  //   )
-  // }, [])
-  return <div>Buba</div>
-  // return question != null ? (
-  //   <Container maxWidth="sm">
-  //     <Typography variant="h2" sx={{ mb: 2 }}>
-  //       {question.question}
-  //     </Typography>
-  //     <RenderIf condition={answerStatus == "none"}>
-  //       <Timer
-  //         countdown={countdown}
-  //         setCountdown={setCountdown}
-  //         onTimeout={() => {
-  //           setAnswerStatus("timeout")
-  //           setEveryoneReady(true)
-  //           setReady(items.gameId, items.name, true)
-  //           handler.setCanAnswer(false)
-  //         }}
-  //       />
-  //       <List>
-  //         {answers.map((answer, i) => (
-  //           <ListItemButton
-  //             key={i}
-  //             color="secondary"
-  //             disabled={iAmReady}
-  //             onClick={async () => {
-  //               setReady(items.gameId, items.name, true)
-  //               if (answer == question.correct) {
-  //                 setAnswerStatus("correct")
-  //                 handler.increaseNumberCorrect()
-  //                 increaseNumberCorrect(items.gameId, items.name)
-  //               } else {
-  //                 setAnswerStatus("wrong")
-  //               }
-  //             }}
-  //           >
-  //             <ListItemText>{answer}</ListItemText>
-  //           </ListItemButton>
-  //         ))}
-  //       </List>
-  //     </RenderIf>
-  //     <RenderIf condition={answerStatus == "correct"}>
-  //       <Alert severity="success">Richtige Antwort!</Alert>
-  //     </RenderIf>
-  //     <RenderIf condition={answerStatus == "wrong"}>
-  //       <Alert severity="error">Falsche Antwort!</Alert>
-  //     </RenderIf>
-  //     <RenderIf condition={answerStatus == "timeout"}>
-  //       <Alert severity="error">Die Zeit ist abgelaufen!</Alert>
-  //     </RenderIf>
-  //     <RenderIf condition={answerStatus != "none"}>
-  //       <List>
-  //         {[...playerData]
-  //           .sort((a: any, b: any) => b.numberCorrect - a.numberCorrect)
-  //           .map((player: any, i: number) => (
-  //             <ListItemText key={i}>
-  //               {player.name + " " + player.numberCorrect}
-  //             </ListItemText>
-  //           ))}
-  //       </List>
-  //     </RenderIf>
-  //     <RenderIf condition={answerStatus != "none" && items.isHost}>
-  //       <SpinnerButton
-  //         disabled={!everyoneReady}
-  //         job={async () => {
-  //           await makeEveryoneUnready(items.gameId)
-  //           await nextStage(items.gameId)
-  //           setCountdown(maxTime)
-  //         }}
-  //       >
-  //         Nächste Station
-  //       </SpinnerButton>
-  //     </RenderIf>
-  //   </Container>
-  // ) : (
-  //   <></>
-  // )
+  return question != null ? (
+    <Container maxWidth="sm">
+      <Typography variant="h2" sx={{ mb: 2 }}>
+        {question.question}
+      </Typography>
+      <RenderIf condition={myPlayerData.answerStatus == "none"}>
+        <Timer
+          countdown={countdown}
+          setCountdown={setCountdown}
+          onTimeout={async () => {
+            await setAnswerStatus(
+              gameData.gameId,
+              cachedName,
+              myPlayerData.answerStatus
+            )
+            await setReady(gameData.gameId, cachedName, true)
+          }}
+        />
+        <List>
+          {answers.map((answer, i) => (
+            <ListItemButton
+              key={i}
+              color="secondary"
+              disabled={myPlayerData.ready}
+              onClick={async () => {
+                setReady(gameData.gameId, cachedName, true)
+                if (answer == question.correct) {
+                  setAnswerStatus(gameData.gameId, cachedName, "correct")
+                  increaseNumberCorrect(gameData.gameId, cachedName)
+                } else {
+                  setAnswerStatus(gameData.gameId, cachedName, "wrong")
+                }
+              }}
+            >
+              <ListItemText>{answer}</ListItemText>
+            </ListItemButton>
+          ))}
+        </List>
+      </RenderIf>
+      <RenderIf condition={myPlayerData.answerStatus == "correct"}>
+        <Alert severity="success">Richtige Antwort!</Alert>
+      </RenderIf>
+      <RenderIf condition={myPlayerData.answerStatus == "wrong"}>
+        <Alert severity="error">Falsche Antwort!</Alert>
+      </RenderIf>
+      <RenderIf condition={myPlayerData.answerStatus == "timeout"}>
+        <Alert severity="error">Die Zeit ist abgelaufen!</Alert>
+      </RenderIf>
+      <RenderIf condition={myPlayerData.answerStatus != "none"}>
+        <List>
+          {[...gameData.players]
+            .sort((a: Player, b: Player) => b.numberCorrect - a.numberCorrect)
+            .map((player: Player, i: number) => (
+              <ListItemText key={i}>
+                {player.name + " " + player.numberCorrect}
+              </ListItemText>
+            ))}
+        </List>
+      </RenderIf>
+      <RenderIf
+        condition={
+          myPlayerData.answerStatus != "none" && gameData.host == cachedName
+        }
+      >
+        <SpinnerButton
+          disabled={!everyoneReady}
+          job={async () => {
+            await makeEveryoneUnready(gameData.gameId)
+            await nextStage(gameData.gameId)
+            setCountdown(maxTime)
+          }}
+        >
+          Nächste Station
+        </SpinnerButton>
+      </RenderIf>
+    </Container>
+  ) : (
+    <></>
+  )
 }
 
 const stages: any = {
