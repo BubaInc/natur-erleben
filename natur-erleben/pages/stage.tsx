@@ -51,7 +51,7 @@ export default function Stage() {
       myPlayerData.setup("games/" + cachedGameId + "/players/" + playerId)
       gameData.setup("games/" + cachedGameId, (newValue) => {
         if (newValue.stage > gameData.state.stage) setCountdown(maxTime)
-        if (newValue.stage > stages.length - 1) router.push("/result")
+        if (newValue.stage > stages.length) router.push("/result")
       })
       answerStatus.setup(
         "games/" + cachedGameId + "/players/" + playerId + "/answerStatus"
