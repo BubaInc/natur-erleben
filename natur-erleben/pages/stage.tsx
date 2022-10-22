@@ -10,7 +10,14 @@ import { useEffect, useState } from "react"
 import RenderIf from "../components/RenderIf"
 import SpinnerButton from "../components/SpinnerButton"
 import Timer from "../components/Timer"
-import { downloadGameData, GameData, Player, reference } from "../util/Firebase"
+import {
+  downloadGameData,
+  downloadPlayerData,
+  findPlayerId,
+  GameData,
+  Player,
+  reference,
+} from "../util/Firebase"
 import { getItem } from "../util/StorageHandler"
 import { stages } from "../util/Stages"
 
@@ -26,6 +33,9 @@ export default function Stage() {
     const cachedName = getItem("name")
     const cachedGameId = getItem("gameId")
     if (!cachedName || !cachedGameId) return
+    downloadPlayerData(cachedGameId, cachedName).then((data) =>
+      setMyPlayerData(data)
+    )
     downloadGameData(cachedGameId).then((data) => {
       setGameData(data)
       // Listen to changes to the game data
@@ -46,7 +56,6 @@ export default function Stage() {
   }, [])
   const question = stages[gameData.stage - 1]
   const answers = question ? question.answers : []
-
   return question != null && myPlayerData != null ? (
     <Container maxWidth="sm">
       {/* The title displaying the question */}
@@ -154,11 +163,6 @@ const shuffle = (a: any[]) => {
   }
   return a
 }
-
-const findPlayerId = (gameData: GameData, playerName: string) =>
-  Object.keys(gameData.players).filter(
-    (key) => gameData.players[key].name == playerName
-  )[0]
 
 const changeAnswerStatus = async (
   gameId: string,
