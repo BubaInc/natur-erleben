@@ -36,9 +36,10 @@ export default function Stage() {
     const cachedName = getItem("name")
     const cachedGameId = getItem("gameId")
     if (!cachedName || !cachedGameId) return
-    downloadPlayerData(cachedGameId, cachedName).then((data) =>
+    downloadPlayerData(cachedGameId, cachedName).then((data) => {
       setMyPlayerData(data)
-    )
+      setAnswerStatus(data.answerStatus)
+    })
     downloadGameData(cachedGameId).then((data) => {
       setGameData(data)
       // Listen to changes to the game data
