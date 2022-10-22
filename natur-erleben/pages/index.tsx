@@ -44,6 +44,7 @@ const Home: NextPage = () => {
   // Gets called whenever the user clicks the "continue" button
   const onCreateGameClick = async () => {
     if (step == "create") {
+      // Create a new game
       const id = await generateNewGameId()
       await uploadGameData(id, new GameData(id, playerName, 0, {}))
       const newPlayer = push(reference("games/" + id + "/players"))
@@ -51,6 +52,7 @@ const Home: NextPage = () => {
       init(playerName, id)
       router.push("/lobby")
     } else if (step == "join") {
+      // Check if the entered values are valid
       if (!(await isGameIdValid(gameId))) {
         setInvalidGameId(true)
         return

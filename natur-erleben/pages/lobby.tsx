@@ -12,7 +12,7 @@ import { getItem } from "../util/StorageHandler"
 
 export default function Lobby() {
   const router = useRouter()
-  const [players, setPlayers] = useState<Player[]>([])
+  const [players, setPlayers] = useState<string[]>([])
   const [gameData, setGameData] = useState(new GameData("", "", -1, {}))
   const [myName, setMyName] = useState("")
 
@@ -42,7 +42,7 @@ export default function Lobby() {
       </Typography>
       <List>
         {players.map((player, i) => {
-          return <ListItemText key={i}>{player.name}</ListItemText>
+          return <ListItemText key={i}>{player}</ListItemText>
         })}
       </List>
       <RenderIf condition={gameData.host == myName}>
