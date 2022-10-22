@@ -2,7 +2,6 @@ import List from "@mui/material/List"
 import Container from "@mui/material/Container"
 import ListItemText from "@mui/material/ListItemText"
 import { useState } from "react"
-import { watchPlayerList } from "../util/Firebase"
 
 export default function Result() {
   // const items = useItems((items) => {
