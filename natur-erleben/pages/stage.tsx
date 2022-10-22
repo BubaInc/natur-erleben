@@ -47,7 +47,12 @@ export default function Stage() {
       })
       // Listen to changes to own player data
       onValue(
-        reference("games/" + cachedGameId + "/players/" + cachedName),
+        reference(
+          "games/" +
+            cachedGameId +
+            "/players/" +
+            findPlayerId(gameData, cachedName)
+        ),
         (snapshot) => {
           setMyPlayerData(snapshot.val())
         }
