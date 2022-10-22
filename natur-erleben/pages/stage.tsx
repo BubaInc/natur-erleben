@@ -58,6 +58,7 @@ export default function Stage() {
             findPlayerId(gameData, cachedName)
         ),
         (snapshot) => {
+          if (!snapshot.exists()) return
           setMyPlayerData(snapshot.val())
           setAnswerStatus(snapshot.val().answerStatus)
         }
