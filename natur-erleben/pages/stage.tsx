@@ -74,7 +74,7 @@ export default function Stage() {
         {question.question}
       </Typography>
       {/* Display the answers if the user has not answered yet */}
-      <RenderIf condition={myPlayerData.answerStatus == "none"}>
+      <RenderIf condition={answerStatus == "none"}>
         {/* Timer that readies the player up when time is up */}
         <Timer
           countdown={countdown}
@@ -120,16 +120,16 @@ export default function Stage() {
           ))}
         </List>
       </RenderIf>
-      <RenderIf condition={myPlayerData.answerStatus == "correct"}>
+      <RenderIf condition={answerStatus == "correct"}>
         <Alert severity="success">Richtige Antwort!</Alert>
       </RenderIf>
-      <RenderIf condition={myPlayerData.answerStatus == "wrong"}>
+      <RenderIf condition={answerStatus == "wrong"}>
         <Alert severity="error">Falsche Antwort!</Alert>
       </RenderIf>
-      <RenderIf condition={myPlayerData.answerStatus == "timeout"}>
+      <RenderIf condition={answerStatus == "timeout"}>
         <Alert severity="error">Die Zeit ist abgelaufen!</Alert>
       </RenderIf>
-      <RenderIf condition={myPlayerData.answerStatus != "none"}>
+      <RenderIf condition={answerStatus != "none"}>
         <List>
           {Object.keys(gameData.players)
             .map((key) => gameData.players[key])
@@ -142,10 +142,7 @@ export default function Stage() {
         </List>
       </RenderIf>
       <RenderIf
-        condition={
-          myPlayerData.answerStatus != "none" &&
-          gameData.host == myPlayerData.name
-        }
+        condition={answerStatus != "none" && gameData.host == myPlayerData.name}
       >
         <SpinnerButton
           disabled={!isEveryoneReady(gameData)}
