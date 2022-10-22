@@ -48,7 +48,7 @@ const Home: NextPage = () => {
       const id = await generateNewGameId()
       await uploadGameData(id, new GameData(id, playerName, 0, {}))
       const newPlayer = push(reference("games/" + id + "/players"))
-      await set(newPlayer, new Player(playerName, 0, true, "none"))
+      await set(newPlayer, new Player(playerName, 0, false, "none"))
       init(playerName, id)
       router.push("/lobby")
     } else if (step == "join") {
