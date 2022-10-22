@@ -2,35 +2,39 @@ import Container from "@mui/material/Container"
 import List from "@mui/material/List"
 import ListItemText from "@mui/material/ListItemText"
 import Typography from "@mui/material/Typography"
+import { onValue, set } from "firebase/database"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import RenderIf from "../components/RenderIf"
 import SpinnerButton from "../components/SpinnerButton"
-import {
-  changeStage,
-  defaultGameData,
-  downloadGameData,
-  GameData,
-  Player,
-  watchGameData,
-} from "../util/Firebase"
-import handler from "../util/StorageHandler"
+import { downloadGameData, GameData, Player, reference } from "../util/Firebase"
+import { getItem } from "../util/StorageHandler"
 
 export default function Lobby() {
   const router = useRouter()
   const [players, setPlayers] = useState<Player[]>([])
-  const [gameData, setGameData] = useState<GameData>(defaultGameData)
-  const [cachedName, setCachedName] = useState("")
+  const [gameData, setGameData] = useState(new GameData("", "", -1, {}))
+  const [myName, setMyName] = useState("")
 
   useEffect(() => {
-    setCachedName(handler.getItems().name)
-    downloadGameData(handler.getItems().gameId).then((_gameData) => {
-      setGameData(_gameData)
-      watchGameData(handler.getItems().gameId, (data) => {
-        setPlayers(data.players)
-        if (data.stage == 1) router.push("/stage")
+    ;(async () => {
+      const cachedName = getItem("name")
+      const cachedGameId = getItem("gameId")
+      if (!cachedName || !cachedGameId) return
+      setMyName(cachedName)
+      const data = await downloadGameData(cachedGameId)
+      setGameData(data)
+      // Check if the game has started or if the player list has updated
+      onValue(reference("games/" + cachedGameId), (snapshot) => {
+        setGameData(snapshot.val())
+        setPlayers(
+          Object.keys(snapshot.val().players).map(
+            (key) => snapshot.val().players[key].name
+          )
+        )
+        if (snapshot.val().stage == 1) router.push("/stage")
       })
-    })
+    })()
   }, [])
 
   return (
@@ -43,7 +47,7 @@ export default function Lobby() {
           return <ListItemText key={i}>{player.name}</ListItemText>
         })}
       </List>
-      <RenderIf condition={gameData.host == cachedName}>
+      <RenderIf condition={gameData.host == myName}>
         <SpinnerButton
           disabled={players.length <= 1}
           job={() => changeStage(gameData.gameId, 1)}
@@ -53,4 +57,9 @@ export default function Lobby() {
       </RenderIf>
     </Container>
   )
+}
+
+const changeStage = async (gameId: string, newStage: number) => {
+  const stageRef = reference("games/" + gameId + "/stage")
+  await set(stageRef, newStage)
 }

@@ -4,52 +4,60 @@ import Container from "@mui/material/Container"
 import Grid from "@mui/material/Grid"
 import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography"
+import { get, push, set } from "firebase/database"
 import type { NextPage } from "next"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import RenderIf from "../components/RenderIf"
 import SpinnerButton from "../components/SpinnerButton"
-import {
-  createGame,
-  isGameIdValid,
-  isPlayerNameAvailable,
-  joinGame,
-} from "../util/Firebase"
-import handler from "../util/StorageHandler"
+import { GameData, Player, reference, uploadGameData } from "../util/Firebase"
+import { getItem, init } from "../util/StorageHandler"
 
 const Home: NextPage = () => {
-  const [playerName, setPlayerName] = useState("")
-  const [gameId, setGameId] = useState("")
-  const [step, setStep] = useState(0)
-  const [createMode, setCreateMode] = useState(false)
   const router = useRouter()
-  const [invalidGameId, setInvalidGameId] = useState(false)
+  // Stores the player name and whether or not it is invalid
+  const [playerName, setPlayerName] = useState("")
   const [invalidPlayerName, setInvalidPlayerName] = useState(false)
+  // Stores the game id and whether or not it is invalid
+  const [gameId, setGameId] = useState("")
+  const [invalidGameId, setInvalidGameId] = useState(false)
+  // The state that identifies the current step in the create / join game process
+  type Step = "start" | "create" | "join"
+  const [step, setStep] = useState<Step>("start")
+  // Stores the cached game id
   const [reconnect, setReconnect] = useState("")
 
+  // Check whether there is a cached game id
   useEffect(() => {
-    const gameId = window.localStorage.getItem("gameId")
-    if (gameId != null) {
-      setReconnect(gameId)
+    const cachedId = getItem("gameId")
+    if (cachedId != null) {
+      setReconnect(cachedId)
     }
   }, [])
 
+  // Gets called whenever the user clicks the "continue" button
   const onCreateGameClick = async () => {
-    if (createMode) {
-      const id = await createGame(playerName)
-      handler.init(playerName, id)
+    if (step == "create") {
+      const id = await generateNewGameId()
+      await uploadGameData(id, new GameData(id, playerName, 0, {}))
+      const newPlayer = push(reference("games/" + id + "/players"))
+      await set(newPlayer, new Player(playerName, 0, true, "none"))
+      init(playerName, id)
       router.push("/lobby")
-    } else {
+    } else if (step == "join") {
       if (!(await isGameIdValid(gameId))) {
         setInvalidGameId(true)
         return
-      }
-      if (!(await isPlayerNameAvailable(playerName, gameId))) {
+      } else if (!(await isPlayerNameAvailable(playerName, gameId))) {
         setInvalidPlayerName(true)
         return
       }
-      await joinGame(playerName, gameId)
-      handler.init(playerName, gameId)
+      // Join the game
+      await set(
+        push(reference("games/" + gameId + "/players")),
+        new Player(playerName, 0, false, "none")
+      )
+      init(playerName, gameId)
       router.push("/lobby")
     }
   }
@@ -69,71 +77,91 @@ const Home: NextPage = () => {
             </Button>
           </Grid>
         </RenderIf>
-        {step == 0 ? (
+        <RenderIf condition={step === "start"}>
           <>
             <Grid item xs={12}>
               <Button
                 fullWidth
                 variant="contained"
-                onClick={() => {
-                  setStep(1)
-                  setCreateMode(true)
-                }}
+                onClick={() => setStep("create")}
               >
                 Spiel eröffnen
               </Button>
             </Grid>
             <Grid item xs={12}>
-              <Button fullWidth variant="contained" onClick={() => setStep(1)}>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={() => setStep("join")}
+              >
                 Spiel beitreten
               </Button>
             </Grid>
           </>
-        ) : (
-          <></>
-        )}
-        {step == 1 ? (
-          <>
+        </RenderIf>
+        <RenderIf condition={step == "create" || step == "join"}>
+          <Grid item xs={12}>
+            <TextField
+              label="Name"
+              fullWidth
+              onChange={(e) => setPlayerName(e.target.value)}
+              error={invalidPlayerName}
+            ></TextField>
+          </Grid>
+          <RenderIf condition={step == "join"}>
             <Grid item xs={12}>
               <TextField
-                label="Name"
+                label="Spiel ID"
                 fullWidth
-                onChange={(e) => setPlayerName(e.target.value)}
-                error={invalidPlayerName}
+                onChange={(e) => setGameId(e.target.value)}
+                error={invalidGameId}
               ></TextField>
             </Grid>
-            {!createMode ? (
-              <Grid item xs={12}>
-                <TextField
-                  label="Spiel ID"
-                  fullWidth
-                  onChange={(e) => setGameId(e.target.value)}
-                  error={invalidGameId}
-                ></TextField>
-              </Grid>
-            ) : (
-              <></>
-            )}
-            <Grid item xs={12}>
-              <SpinnerButton
-                fullWidth
-                job={onCreateGameClick}
-                disabled={
-                  createMode
-                    ? playerName == ""
-                    : playerName == "" || gameId == ""
-                }
-              >
-                Weiter
-              </SpinnerButton>
-            </Grid>
-          </>
-        ) : (
-          <></>
-        )}
+          </RenderIf>
+        </RenderIf>
+        <Grid item xs={12}>
+          <SpinnerButton
+            fullWidth
+            job={onCreateGameClick}
+            disabled={
+              step == "create"
+                ? playerName == ""
+                : playerName == "" || gameId == ""
+            }
+          >
+            Weiter
+          </SpinnerButton>
+        </Grid>
       </Grid>
     </Container>
   )
 }
 
 export default Home
+
+const generateNewGameId = async () => {
+  // Download all the game ids
+  const gameIds = Object.keys((await get(reference("games"))).val())
+  // Regenerate game id until it is not in the list
+  let gameId = ""
+  while (gameId == "") {
+    const num1 = Math.floor(Math.random() * 10).toString()
+    const num2 = Math.floor(Math.random() * 10).toString()
+    const num3 = Math.floor(Math.random() * 10).toString()
+    const num4 = Math.floor(Math.random() * 10).toString()
+    const newGameId = num1 + num2 + num3 + num4
+    if (!gameIds.includes(newGameId)) {
+      gameId = newGameId
+    }
+  }
+  return gameId
+}
+
+const isGameIdValid = async (gameId: string) =>
+  (await get(reference("games/" + gameId))).exists()
+
+const isPlayerNameAvailable = async (playerName: string, gameId: string) =>
+  !(await get(reference("games/" + gameId + "/players")))
+    .val()
+    .map((player: any) => player.name)
+    .includes(playerName)

@@ -1,25 +1,15 @@
 type Field = "name" | "gameId"
 
-const setItem = (item: Field, value: string) =>
+export const setItem = (item: Field, value: string) =>
   window.localStorage.setItem(item, value)
 
-const getItem = (item: Field) => window.localStorage.getItem(item)
+export const getItem = (item: Field) => window.localStorage.getItem(item)
 
-const handler = {
-  init: (name: string, gameId: string) => {
-    window.localStorage.clear()
-    setItem("name", name)
-    setItem("gameId", gameId)
-  },
-  getItems: () => {
-    return {
-      name: getItem("name") as string,
-      gameId: getItem("gameId") as string,
-    }
-  },
+export const init = (name: string, gameId: string) => {
+  window.localStorage.clear()
+  setItem("name", name)
+  setItem("gameId", gameId)
 }
-
-export default handler
 
 // export const useItems = (onItemsReady: (i: Items) => void) => {
 //   const [items, setItems] = useState<Items>({
