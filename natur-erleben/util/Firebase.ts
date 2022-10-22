@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app"
-import { get, getDatabase, ref, set } from "firebase/database"
+import { get, getDatabase, onValue, ref, set } from "firebase/database"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 
 const firebaseConfig = {
   databaseURL:
@@ -82,3 +83,18 @@ export const findPlayerId = (gameData: GameData, playerName: string) =>
   Object.keys(gameData.players).filter(
     (key) => gameData.players[key].name == playerName
   )[0]
+
+export const useSync = <Type>(defaultValue: Type) => {
+  const [state, setState] = useState<Type>(defaultValue)
+  async function setup(path: string, onValueChange?: (newValue: Type) => void) {
+    const valueRef = reference(path)
+    const data = await get(valueRef)
+    if (!data.exists()) return
+    setState(data.val())
+    onValue(valueRef, (snapshot) => {
+      if (snapshot.exists()) setState(snapshot.val())
+      if (onValueChange) onValueChange(snapshot.val())
+    })
+  }
+  return { state: state, setup: setup }
+}

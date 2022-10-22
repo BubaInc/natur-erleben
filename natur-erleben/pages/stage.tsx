@@ -4,7 +4,7 @@ import List from "@mui/material/List"
 import ListItemButton from "@mui/material/ListItemButton"
 import ListItemText from "@mui/material/ListItemText"
 import Typography from "@mui/material/Typography"
-import { get, onValue, set } from "firebase/database"
+import { get, set } from "firebase/database"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import RenderIf from "../components/RenderIf"
@@ -12,11 +12,11 @@ import SpinnerButton from "../components/SpinnerButton"
 import Timer from "../components/Timer"
 import {
   downloadGameData,
-  downloadPlayerData,
   findPlayerId,
   GameData,
   Player,
   reference,
+  useSync,
 } from "../util/Firebase"
 import { getItem } from "../util/StorageHandler"
 import { stages } from "../util/Stages"
@@ -25,21 +25,17 @@ export default function Stage() {
   const router = useRouter()
 
   // Values that get synchronized
-  const [gameData, setGameData] = useState(new GameData("", "", 1, {}))
-  const [myPlayerData, setMyPlayerData] = useState(
-    new Player("", 0, false, "none")
-  )
-  const [answerStatus, setAnswerStatus] = useState<
-    "none" | "correct" | "wrong" | "timeout"
-  >("none")
-  const [ready, setReady] = useState(false)
+  const gameData = useSync(new GameData("", "", 1, {}))
+  const myPlayerData = useSync(new Player("", 0, false, "none"))
+  const answerStatus = useSync<"none" | "correct" | "wrong" | "timeout">("none")
+  const ready = useSync(false)
 
   // State for the timer
   const maxTime = 10
   const [countdown, setCountdown] = useState(maxTime)
 
   // Retrieve correct values for the question and the answers
-  const question = stages[gameData.stage - 1]
+  const question = stages[gameData.state.stage - 1]
   const answers = question ? question.answers : []
 
   // Sets up data synchronization after page load
@@ -48,37 +44,19 @@ export default function Stage() {
     const cachedName = getItem("name")
     const cachedGameId = getItem("gameId")
     if (!cachedName || !cachedGameId) return
-    downloadPlayerData(cachedGameId, cachedName).then((data) => {
-      setMyPlayerData(data)
-      setAnswerStatus(data.answerStatus)
-      setReady(data.ready)
-      // Listen to changes to own player data
-      onValue(
-        reference(
-          "games/" +
-            cachedGameId +
-            "/players/" +
-            findPlayerId(gameData, cachedName)
-        ),
-        (snapshot) => {
-          if (!snapshot.exists()) return
-          const value = snapshot.val()
-          setMyPlayerData(value)
-          setAnswerStatus(value.answerStatus)
-          setReady(value.ready)
-        }
-      )
-    })
+
+    // Setup all the synchronized values
     downloadGameData(cachedGameId).then((data) => {
-      setGameData(data)
-      // Listen to changes to the game data
-      onValue(reference("games/" + cachedGameId), (snapshot) => {
-        if (!snapshot.exists()) return
-        const value = snapshot.val()
-        setGameData(value)
-        if (value.stage > gameData.stage) setCountdown(maxTime)
-        if (value.stage > stages.length - 1) router.push("/result")
+      const playerId = findPlayerId(data, cachedName)
+      myPlayerData.setup("games/" + cachedGameId + "/players/" + playerId)
+      gameData.setup("games/" + cachedGameId, (newValue) => {
+        if (newValue.stage > gameData.state.stage) setCountdown(maxTime)
+        if (newValue.stage > stages.length - 1) router.push("/result")
       })
+      answerStatus.setup(
+        "games/" + cachedGameId + "/players/" + playerId + "/answerStatus"
+      )
+      ready.setup("games" + cachedGameId + "/players/" + playerId + "/ready")
     })
   }, [])
 
@@ -89,18 +67,22 @@ export default function Stage() {
         {question.question}
       </Typography>
       {/* Display the answers if the user has not answered yet */}
-      <RenderIf condition={answerStatus == "none"}>
+      <RenderIf condition={answerStatus.state == "none"}>
         {/* Timer that readies the player up when time is up */}
         <Timer
           countdown={countdown}
           setCountdown={setCountdown}
           onTimeout={async () => {
             await changeAnswerStatus(
-              gameData.gameId,
-              myPlayerData.name,
+              gameData.state.gameId,
+              myPlayerData.state.name,
               "timeout"
             )
-            await changeReady(gameData.gameId, myPlayerData.name, true)
+            await changeReady(
+              gameData.state.gameId,
+              myPlayerData.state.name,
+              true
+            )
           }}
         />
         {/* The list of answers */}
@@ -109,23 +91,27 @@ export default function Stage() {
             <ListItemButton
               key={i}
               color="secondary"
-              disabled={myPlayerData.ready}
+              disabled={myPlayerData.state.ready}
               onClick={async () => {
-                await changeReady(gameData.gameId, myPlayerData.name, true)
+                await changeReady(
+                  gameData.state.gameId,
+                  myPlayerData.state.name,
+                  true
+                )
                 if (answer == question.correct) {
                   await changeAnswerStatus(
-                    gameData.gameId,
-                    myPlayerData.name,
+                    gameData.state.gameId,
+                    myPlayerData.state.name,
                     "correct"
                   )
                   await increaseNumberCorrect(
-                    gameData.gameId,
-                    myPlayerData.name
+                    gameData.state.gameId,
+                    myPlayerData.state.name
                   )
                 } else {
                   await changeAnswerStatus(
-                    gameData.gameId,
-                    myPlayerData.name,
+                    gameData.state.gameId,
+                    myPlayerData.state.name,
                     "wrong"
                   )
                 }
@@ -136,20 +122,20 @@ export default function Stage() {
           ))}
         </List>
       </RenderIf>
-      <RenderIf condition={answerStatus == "correct"}>
+      <RenderIf condition={answerStatus.state == "correct"}>
         <Alert severity="success">Richtige Antwort!</Alert>
       </RenderIf>
-      <RenderIf condition={answerStatus == "wrong"}>
+      <RenderIf condition={answerStatus.state == "wrong"}>
         <Alert severity="error">Falsche Antwort!</Alert>
       </RenderIf>
-      <RenderIf condition={answerStatus == "timeout"}>
+      <RenderIf condition={answerStatus.state == "timeout"}>
         <Alert severity="error">Die Zeit ist abgelaufen!</Alert>
       </RenderIf>
-      <RenderIf condition={answerStatus != "none"}>
+      <RenderIf condition={answerStatus.state != "none"}>
         {/* Shows the leaderboard ordered by numberCorrect */}
         <List>
-          {Object.keys(gameData.players)
-            .map((key) => gameData.players[key])
+          {Object.keys(gameData.state.players)
+            .map((key) => gameData.state.players[key])
             .sort((a: Player, b: Player) => b.numberCorrect - a.numberCorrect)
             .map((player: Player, i: number) => (
               <ListItemText key={i}>
@@ -158,12 +144,14 @@ export default function Stage() {
             ))}
         </List>
       </RenderIf>
-      <RenderIf condition={ready && gameData.host == myPlayerData.name}>
+      <RenderIf
+        condition={ready && gameData.state.host == myPlayerData.state.name}
+      >
         <SpinnerButton
-          disabled={!isEveryoneReady(gameData)}
+          disabled={!isEveryoneReady(gameData.state)}
           job={async () => {
-            await makeEveryoneUnready(gameData.gameId)
-            await nextStage(gameData.gameId)
+            await makeEveryoneUnready(gameData.state.gameId)
+            await nextStage(gameData.state.gameId)
             setCountdown(maxTime)
           }}
         >
@@ -209,13 +197,11 @@ const changeReady = async (
 }
 
 const increaseNumberCorrect = async (gameId: string, playerName: string) => {
-  const gameData = await downloadGameData(gameId)
-  const playerId = findPlayerId(gameData, playerName)
   const numberCorrectRef = reference(
     "games/" +
       gameId +
       "/players/" +
-      findPlayerId(gameData, playerName) +
+      findPlayerId(await downloadGameData(gameId), playerName) +
       "/numberCorrect"
   )
   await set(numberCorrectRef, (await get(numberCorrectRef)).val() + 1)
