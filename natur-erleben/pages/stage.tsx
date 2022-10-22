@@ -47,7 +47,7 @@ export default function Stage() {
   const question = stages[gameData.stage - 1]
   const answers = question ? question.answers : []
 
-  return question != null ? (
+  return question != null && myPlayerData != null ? (
     <Container maxWidth="sm">
       {/* The title displaying the question */}
       <Typography variant="h2" sx={{ mb: 2 }}>
