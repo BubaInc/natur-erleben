@@ -19,7 +19,7 @@ import {
   useSync,
 } from "../util/Firebase"
 import { getItem } from "../util/StorageHandler"
-import { stages } from "../util/Stages"
+import { Question, stages } from "../util/Stages"
 
 export default function Stage() {
   const router = useRouter()
@@ -98,7 +98,7 @@ export default function Stage() {
                   myPlayerData.state.name,
                   true
                 )
-                if (answer == question.correct) {
+                if (isAnswerCorrect(answer, question)) {
                   await changeAnswerStatus(
                     gameData.state.gameId,
                     myPlayerData.state.name,
@@ -225,4 +225,14 @@ const makeEveryoneUnready = async (gameId: string) => {
 const nextStage = async (gameId: string) => {
   const stageRef = reference("games/" + gameId + "/stage")
   await set(stageRef, (await get(stageRef)).val() + 1)
+}
+
+const isAnswerCorrect = (answer: string, question: Question) => {
+  if (typeof question.correct == typeof "") {
+    // correct answer is a string
+    return answer == question.correct
+  } else {
+    // correct answer allows multiple values
+    return (question.correct as string[]).includes(answer)
+  }
 }
