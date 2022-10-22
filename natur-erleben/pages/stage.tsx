@@ -29,6 +29,9 @@ export default function Stage() {
   )
   const maxTime = 10
   const [countdown, setCountdown] = useState(maxTime)
+  const [answerStatus, setAnswerStatus] = useState<
+    "none" | "correct" | "wrong" | "timeout"
+  >("none")
   useEffect(() => {
     const cachedName = getItem("name")
     const cachedGameId = getItem("gameId")
@@ -55,6 +58,7 @@ export default function Stage() {
         ),
         (snapshot) => {
           setMyPlayerData(snapshot.val())
+          setAnswerStatus(snapshot.val().answerStatus)
         }
       )
     })
