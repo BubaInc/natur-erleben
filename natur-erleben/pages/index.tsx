@@ -10,7 +10,13 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import RenderIf from "../components/RenderIf"
 import SpinnerButton from "../components/SpinnerButton"
-import { GameData, Player, reference, uploadGameData } from "../util/Firebase"
+import {
+  downloadGameData,
+  GameData,
+  Player,
+  reference,
+  uploadGameData,
+} from "../util/Firebase"
 import { getItem, init } from "../util/StorageHandler"
 
 const Home: NextPage = () => {
@@ -160,8 +166,9 @@ const generateNewGameId = async () => {
 const isGameIdValid = async (gameId: string) =>
   (await get(reference("games/" + gameId))).exists()
 
-const isPlayerNameAvailable = async (playerName: string, gameId: string) =>
-  !(await get(reference("games/" + gameId + "/players")))
-    .val()
-    .map((player: any) => player.name)
+const isPlayerNameAvailable = async (playerName: string, gameId: string) => {
+  const data = await downloadGameData(gameId)
+  return !Object.keys(data.players)
+    .map((key) => data.players[key].name)
     .includes(playerName)
+}
