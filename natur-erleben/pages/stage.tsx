@@ -111,7 +111,8 @@ export default function Stage() {
       </RenderIf>
       <RenderIf condition={myPlayerData.answerStatus != "none"}>
         <List>
-          {[...gameData.players]
+          {Object.keys(gameData.players)
+            .map((key) => gameData.players[key])
             .sort((a: Player, b: Player) => b.numberCorrect - a.numberCorrect)
             .map((player: Player, i: number) => (
               <ListItemText key={i}>
