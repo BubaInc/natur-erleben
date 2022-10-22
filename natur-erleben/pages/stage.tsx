@@ -23,32 +23,35 @@ import { stages } from "../util/Stages"
 
 export default function Stage() {
   const router = useRouter()
+
+  // Values that get synchronized
   const [gameData, setGameData] = useState(new GameData("", "", 1, {}))
   const [myPlayerData, setMyPlayerData] = useState(
     new Player("", 0, false, "none")
   )
-  const maxTime = 10
-  const [countdown, setCountdown] = useState(maxTime)
   const [answerStatus, setAnswerStatus] = useState<
     "none" | "correct" | "wrong" | "timeout"
   >("none")
+  const [ready, setReady] = useState(false)
+
+  // State for the timer
+  const maxTime = 10
+  const [countdown, setCountdown] = useState(maxTime)
+
+  // Retrieve correct values for the question and the answers
+  const question = stages[gameData.stage - 1]
+  const answers = question ? question.answers : []
+
+  // Sets up data synchronization after page load
   useEffect(() => {
+    // Retrieve cached values
     const cachedName = getItem("name")
     const cachedGameId = getItem("gameId")
     if (!cachedName || !cachedGameId) return
     downloadPlayerData(cachedGameId, cachedName).then((data) => {
       setMyPlayerData(data)
       setAnswerStatus(data.answerStatus)
-    })
-    downloadGameData(cachedGameId).then((data) => {
-      setGameData(data)
-      // Listen to changes to the game data
-      onValue(reference("games/" + cachedGameId), (snapshot) => {
-        const value = snapshot.val()
-        setGameData(value)
-        if (value.stage > gameData.stage) setCountdown(maxTime)
-        if (value.stage > stages.length - 1) router.push("/result")
-      })
+      setReady(data.ready)
       // Listen to changes to own player data
       onValue(
         reference(
@@ -59,14 +62,26 @@ export default function Stage() {
         ),
         (snapshot) => {
           if (!snapshot.exists()) return
-          setMyPlayerData(snapshot.val())
-          setAnswerStatus(snapshot.val().answerStatus)
+          const value = snapshot.val()
+          setMyPlayerData(value)
+          setAnswerStatus(value.answerStatus)
+          setReady(value.ready)
         }
       )
     })
+    downloadGameData(cachedGameId).then((data) => {
+      setGameData(data)
+      // Listen to changes to the game data
+      onValue(reference("games/" + cachedGameId), (snapshot) => {
+        if (!snapshot.exists()) return
+        const value = snapshot.val()
+        setGameData(value)
+        if (value.stage > gameData.stage) setCountdown(maxTime)
+        if (value.stage > stages.length - 1) router.push("/result")
+      })
+    })
   }, [])
-  const question = stages[gameData.stage - 1]
-  const answers = question ? question.answers : []
+
   return question != null && myPlayerData != null ? (
     <Container maxWidth="sm">
       {/* The title displaying the question */}
@@ -88,8 +103,9 @@ export default function Stage() {
             await changeReady(gameData.gameId, myPlayerData.name, true)
           }}
         />
+        {/* The list of answers */}
         <List>
-          {answers.map((answer, i) => (
+          {shuffle(answers).map((answer, i) => (
             <ListItemButton
               key={i}
               color="secondary"
@@ -130,6 +146,7 @@ export default function Stage() {
         <Alert severity="error">Die Zeit ist abgelaufen!</Alert>
       </RenderIf>
       <RenderIf condition={answerStatus != "none"}>
+        {/* Shows the leaderboard ordered by numberCorrect */}
         <List>
           {Object.keys(gameData.players)
             .map((key) => gameData.players[key])
@@ -141,9 +158,7 @@ export default function Stage() {
             ))}
         </List>
       </RenderIf>
-      <RenderIf
-        condition={answerStatus != "none" && gameData.host == myPlayerData.name}
-      >
+      <RenderIf condition={ready && gameData.host == myPlayerData.name}>
         <SpinnerButton
           disabled={!isEveryoneReady(gameData)}
           job={async () => {
