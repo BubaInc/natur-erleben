@@ -105,7 +105,7 @@ export default function Stage() {
         />
         {/* The list of answers */}
         <List>
-          {shuffle(answers).map((answer, i) => (
+          {answers.map((answer, i) => (
             <ListItemButton
               key={i}
               color="secondary"
@@ -176,17 +176,6 @@ export default function Stage() {
   )
 }
 
-const shuffle = (a: any[]) => {
-  var j, x, i
-  for (i = a.length - 1; i > 0; i--) {
-    j = Math.floor(Math.random() * (i + 1))
-    x = a[i]
-    a[i] = a[j]
-    a[j] = x
-  }
-  return a
-}
-
 const changeAnswerStatus = async (
   gameId: string,
   playerName: string,
@@ -242,6 +231,7 @@ const makeEveryoneUnready = async (gameId: string) => {
   const data = (await get(playersRef)).val()
   Object.keys(data).forEach((key) => {
     data[key].ready = true
+    data[key].answerStatus = "none"
   })
   await set(playersRef, data)
 }
