@@ -216,7 +216,7 @@ const makeEveryoneUnready = async (gameId: string) => {
   const playersRef = reference("games/" + gameId + "/players")
   const data = (await get(playersRef)).val()
   Object.keys(data).forEach((key) => {
-    data[key].ready = true
+    data[key].ready = false
     data[key].answerStatus = "none"
   })
   await set(playersRef, data)
