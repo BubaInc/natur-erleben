@@ -17,24 +17,22 @@ export default function Lobby() {
   const [myName, setMyName] = useState("")
 
   useEffect(() => {
-    ;(async () => {
-      const cachedName = getItem("name")
-      const cachedGameId = getItem("gameId")
-      if (!cachedName || !cachedGameId) return
-      setMyName(cachedName)
-      const data = await downloadGameData(cachedGameId)
+    const cachedName = getItem("name")
+    const cachedGameId = getItem("gameId")
+    if (!cachedName || !cachedGameId) return
+    setMyName(cachedName)
+    downloadGameData(cachedGameId).then((data) => {
       setGameData(data)
       // Check if the game has started or if the player list has updated
       onValue(reference("games/" + cachedGameId), (snapshot) => {
-        setGameData(snapshot.val())
+        const value = snapshot.val()
+        setGameData(value)
         setPlayers(
-          Object.keys(snapshot.val().players).map(
-            (key) => snapshot.val().players[key].name
-          )
+          Object.keys(value.players).map((key) => value.players[key].name)
         )
-        if (snapshot.val().stage == 1) router.push("/stage")
+        if (value.stage == 1) router.push("/stage")
       })
-    })()
+    })
   }, [])
 
   return (
