@@ -169,6 +169,7 @@ const isGameIdValid = async (gameId: string) =>
   (await get(reference("games/" + gameId))).exists()
 
 const isPlayerNameAvailable = async (playerName: string, gameId: string) => {
+  if (playerName.includes("/")) return false
   const data = await downloadGameData(gameId)
   return !Object.keys(data.players)
     .map((key) => data.players[key].name)
