@@ -21,6 +21,9 @@ import {
 } from "../util/Firebase"
 import { getItem, setItem } from "../util/StorageHandler"
 import { Question, stages } from "../util/Stages"
+import Box from "@mui/material/Box"
+import IconButton from "@mui/material/IconButton"
+import CloseIcon from "@mui/icons-material/Close"
 
 export default function Stage() {
   const router = useRouter()
@@ -146,9 +149,14 @@ export default function Stage() {
             .map((key) => gameData.state.players[key])
             .sort((a: Player, b: Player) => b.numberCorrect - a.numberCorrect)
             .map((player: Player, i: number) => (
-              <ListItemText key={i}>
-                {player.name + " " + player.numberCorrect}
-              </ListItemText>
+              <Box>
+                <ListItemText key={i}>
+                  {player.name + " " + player.numberCorrect}
+                </ListItemText>
+                <IconButton>
+                  <CloseIcon />
+                </IconButton>
+              </Box>
             ))}
         </List>
       </RenderIf>
