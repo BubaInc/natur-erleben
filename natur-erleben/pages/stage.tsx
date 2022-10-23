@@ -42,8 +42,6 @@ export default function Stage() {
 
   const [hasSeenQuestion, setHasSeenQuestion] = useState(false)
 
-  useEffect(() => console.log(hasSeenQuestion), [hasSeenQuestion])
-
   // Sets up data synchronization after page load
   useEffect(() => {
     // Retrieve cached values
@@ -79,13 +77,13 @@ export default function Stage() {
       <Typography variant="h2" sx={{ mb: 2 }}>
         {question.question}
       </Typography>
-      {/* Display the answers if the user has not answered yet */}
-      <RenderIf condition={answerStatus.state == "none"}>
-        {/* Timer that readies the player up when time is up */}
-        <Timer
-          countdown={countdown}
-          setCountdown={setCountdown}
-          onTimeout={async () => {
+      {/* Timer that readies the player up when time is up */}
+      <Timer
+        enabled={answerStatus.state == "none"}
+        countdown={countdown}
+        setCountdown={setCountdown}
+        onTimeout={async () => {
+          if (answerStatus.state != "timeout") {
             await changeAnswerStatus(
               gameData.state.gameId,
               myPlayerData.state.name,
@@ -96,8 +94,11 @@ export default function Stage() {
               myPlayerData.state.name,
               true
             )
-          }}
-        />
+          }
+        }}
+      />
+      {/* Display the answers if the user has not answered yet */}
+      <RenderIf condition={answerStatus.state == "none"}>
         {/* The list of answers */}
         <List>
           {answers.map((answer, i) => (
