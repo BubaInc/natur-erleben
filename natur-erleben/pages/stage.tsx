@@ -4,7 +4,7 @@ import List from "@mui/material/List"
 import ListItemButton from "@mui/material/ListItemButton"
 import ListItemText from "@mui/material/ListItemText"
 import Typography from "@mui/material/Typography"
-import { get, set } from "firebase/database"
+import { get, remove, set } from "firebase/database"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import RenderIf from "../components/RenderIf"
@@ -153,7 +153,22 @@ export default function Stage() {
                 <ListItemText key={i}>
                   {player.name + " " + player.numberCorrect}
                 </ListItemText>
-                <IconButton>
+                <IconButton
+                  onClick={async () => {
+                    // Remove that player
+                    const playerId = findPlayerId(gameData.state, player.name)
+                    await remove(
+                      reference(
+                        path(
+                          "games",
+                          gameData.state.gameId,
+                          "players",
+                          playerId
+                        )
+                      )
+                    )
+                  }}
+                >
                   <CloseIcon />
                 </IconButton>
               </Box>
