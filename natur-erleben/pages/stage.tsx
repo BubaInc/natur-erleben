@@ -18,7 +18,7 @@ import {
   reference,
   useSync,
 } from "../util/Firebase"
-import { getItem } from "../util/StorageHandler"
+import { getItem, setItem } from "../util/StorageHandler"
 import { Question, stages } from "../util/Stages"
 
 export default function Stage() {
@@ -45,12 +45,20 @@ export default function Stage() {
     const cachedGameId = getItem("gameId")
     if (!cachedName || !cachedGameId) return
 
+    // Check whether the user has already seen the question
+    if (getItem("hasSeenQuestion") == "yes") {
+      setHasSeenQuestion(true)
+    }
+
     // Setup all the synchronized values
     downloadGameData(cachedGameId).then((data) => {
       const playerId = findPlayerId(data, cachedName)
       myPlayerData.setup("games/" + cachedGameId + "/players/" + playerId)
       gameData.setup("games/" + cachedGameId, (newValue) => {
-        if (newValue.stage > gameData.state.stage) setCountdown(maxTime)
+        if (newValue.stage > gameData.state.stage) {
+          setCountdown(maxTime)
+          setItem("hasSeenQuestion", "no")
+        }
         if (newValue.stage > stages.length) router.push("/result")
       })
       answerStatus.setup(
@@ -59,6 +67,14 @@ export default function Stage() {
       ready.setup("games" + cachedGameId + "/players/" + playerId + "/ready")
     })
   }, [])
+
+  // Used for anti-cheat; saves "yes" to memory when a new question is displayed
+  const [hasSeenQuestion, setHasSeenQuestion] = useState(false)
+  useEffect(() => {
+    if (countdown == 10) {
+      setItem("hasSeenQuestion", "yes")
+    }
+  }, [countdown])
 
   return question != null && myPlayerData != null ? (
     <Container maxWidth="sm">
@@ -91,7 +107,7 @@ export default function Stage() {
             <ListItemButton
               key={i}
               color="secondary"
-              disabled={myPlayerData.state.ready}
+              disabled={hasSeenQuestion}
               onClick={async () => {
                 await changeReady(
                   gameData.state.gameId,

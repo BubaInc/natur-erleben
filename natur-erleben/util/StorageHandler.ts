@@ -1,4 +1,4 @@
-type Field = "name" | "gameId"
+type Field = "name" | "gameId" | "hasSeenQuestion"
 
 export const setItem = (item: Field, value: string) =>
   window.localStorage.setItem(item, value)
@@ -9,6 +9,7 @@ export const init = (name: string, gameId: string) => {
   window.localStorage.clear()
   setItem("name", name)
   setItem("gameId", gameId)
+  setItem("hasSeenQuestion", "no")
 }
 
 // export const useItems = (onItemsReady: (i: Items) => void) => {
