@@ -13,6 +13,7 @@ import SpinnerButton from "../components/SpinnerButton"
 import {
   downloadGameData,
   GameData,
+  path,
   Player,
   reference,
   uploadGameData,
@@ -70,6 +71,15 @@ const Home: NextPage = () => {
     }
   }
 
+  const onReconnectButtonClick = async () => {
+    const runningGameData = await downloadGameData(reconnect)
+    if (runningGameData.stage == 0) {
+      router.push("/lobby")
+    } else {
+      router.push("/stage")
+    }
+  }
+
   return (
     <Container maxWidth="sm">
       <Grid container spacing={2}>
@@ -80,7 +90,7 @@ const Home: NextPage = () => {
         </Grid>
         <RenderIf condition={reconnect != ""}>
           <Grid item xs={12}>
-            <Button onClick={() => router.push("/stage")}>
+            <Button onClick={() => onReconnectButtonClick()}>
               Wieder mit Spiel {reconnect} verbinden
             </Button>
           </Grid>
