@@ -149,8 +149,8 @@ export default function Stage() {
             .map((key) => gameData.state.players[key])
             .sort((a: Player, b: Player) => b.numberCorrect - a.numberCorrect)
             .map((player: Player, i: number) => (
-              <Box>
-                <ListItemText key={i}>
+              <Box key={i}>
+                <ListItemText>
                   {player.name + " " + player.numberCorrect}
                 </ListItemText>
                 <IconButton
