@@ -14,6 +14,7 @@ import {
   downloadGameData,
   findPlayerId,
   GameData,
+  path,
   Player,
   reference,
   useSync,
@@ -27,6 +28,7 @@ export default function Stage() {
   // Values that get synchronized
   const gameData = useSync(new GameData("", "", 1, {}))
   const myPlayerData = useSync(new Player("", 0, false, "none"))
+  const stage = useSync(0)
   const answerStatus = useSync<"none" | "correct" | "wrong" | "timeout">("none")
   const ready = useSync(false)
 
@@ -35,10 +37,12 @@ export default function Stage() {
   const [countdown, setCountdown] = useState(maxTime)
 
   // Retrieve correct values for the question and the answers
-  const question = stages[gameData.state.stage - 1]
+  const question = stages[stage.state - 1]
   const answers = question ? question.answers : []
 
   const [hasSeenQuestion, setHasSeenQuestion] = useState(false)
+
+  useEffect(() => console.log(hasSeenQuestion), [hasSeenQuestion])
 
   // Sets up data synchronization after page load
   useEffect(() => {
@@ -51,20 +55,21 @@ export default function Stage() {
 
     // Setup all the synchronized values
     downloadGameData(cachedGameId).then((data) => {
-      const playerId = findPlayerId(data, cachedName)
-      myPlayerData.setup("games/" + cachedGameId + "/players/" + playerId)
-      gameData.setup("games/" + cachedGameId, (newValue) => {
-        if (newValue.stage > gameData.state.stage) {
+      stage.setup(path("games", cachedGameId, "stage"), (newValue) => {
+        if (newValue > stage.state) {
           setCountdown(maxTime)
-          setHasSeenQuestion(false)
           setItem("hasSeenQuestion", "true")
+          setHasSeenQuestion(false)
         }
-        if (newValue.stage > stages.length) router.push("/result")
+        if (newValue > stages.length) router.push("/result")
       })
+      const playerId = findPlayerId(data, cachedName)
+      myPlayerData.setup(path("games", cachedGameId, "players", playerId))
+      gameData.setup(path("games", cachedGameId))
       answerStatus.setup(
-        "games/" + cachedGameId + "/players/" + playerId + "/answerStatus"
+        path("games", cachedGameId, "players", playerId, "answerStatus")
       )
-      ready.setup("games" + cachedGameId + "/players/" + playerId + "/ready")
+      ready.setup(path("games", cachedGameId, "players", playerId, "ready"))
     })
   }, [])
 
@@ -154,7 +159,6 @@ export default function Stage() {
           job={async () => {
             await makeEveryoneUnready(gameData.state.gameId)
             await nextStage(gameData.state.gameId)
-            setCountdown(maxTime)
           }}
         >
           Nächste Station
@@ -173,11 +177,13 @@ const changeAnswerStatus = async (
 ) => {
   const gameData = await downloadGameData(gameId)
   const answerStatusRef = reference(
-    "games/" +
-      gameId +
-      "/players/" +
-      findPlayerId(gameData, playerName) +
-      "/answerStatus"
+    path(
+      "games",
+      gameId,
+      "players",
+      findPlayerId(gameData, playerName),
+      "answerStatus"
+    )
   )
   await set(answerStatusRef, answerStatus)
 }
@@ -189,22 +195,26 @@ const changeReady = async (
 ) => {
   const gameData = await downloadGameData(gameId)
   const readyRef = reference(
-    "games/" +
-      gameId +
-      "/players/" +
-      findPlayerId(gameData, playerName) +
-      "/ready"
+    path(
+      "games",
+      gameId,
+      "players",
+      findPlayerId(gameData, playerName),
+      "ready"
+    )
   )
   await set(readyRef, ready)
 }
 
 const increaseNumberCorrect = async (gameId: string, playerName: string) => {
   const numberCorrectRef = reference(
-    "games/" +
-      gameId +
-      "/players/" +
-      findPlayerId(await downloadGameData(gameId), playerName) +
-      "/numberCorrect"
+    path(
+      "games",
+      gameId,
+      "players",
+      findPlayerId(await downloadGameData(gameId), playerName),
+      "numberCorrect"
+    )
   )
   await set(numberCorrectRef, (await get(numberCorrectRef)).val() + 1)
 }
@@ -225,7 +235,7 @@ const makeEveryoneUnready = async (gameId: string) => {
 }
 
 const nextStage = async (gameId: string) => {
-  const stageRef = reference("games/" + gameId + "/stage")
+  const stageRef = reference(path("games", gameId, "stage"))
   await set(stageRef, (await get(stageRef)).val() + 1)
 }
 

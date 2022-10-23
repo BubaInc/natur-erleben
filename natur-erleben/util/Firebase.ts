@@ -98,3 +98,8 @@ export const useSync = <Type>(defaultValue: Type) => {
   }
   return { state: state, setup: setup }
 }
+
+export const path = (...elements: string[]) =>
+  elements.reduce((previous, current, i) =>
+    i == 0 ? current : previous + "/" + current
+  )
