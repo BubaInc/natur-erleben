@@ -9,7 +9,7 @@ export const init = (name: string, gameId: string) => {
   window.localStorage.clear()
   setItem("name", name)
   setItem("gameId", gameId)
-  setItem("hasSeenQuestion", "no")
+  setItem("hasSeenQuestion", "false")
 }
 
 // export const useItems = (onItemsReady: (i: Items) => void) => {

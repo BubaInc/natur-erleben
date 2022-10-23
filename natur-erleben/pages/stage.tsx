@@ -38,17 +38,16 @@ export default function Stage() {
   const question = stages[gameData.state.stage - 1]
   const answers = question ? question.answers : []
 
+  const [hasSeenQuestion, setHasSeenQuestion] = useState(false)
+
   // Sets up data synchronization after page load
   useEffect(() => {
     // Retrieve cached values
     const cachedName = getItem("name")
     const cachedGameId = getItem("gameId")
+    const cachedHasSeenQuestion = getItem("hasSeenQuestion")
+    if (cachedHasSeenQuestion == "true") setHasSeenQuestion(true)
     if (!cachedName || !cachedGameId) return
-
-    // Check whether the user has already seen the question
-    if (getItem("hasSeenQuestion") == "yes") {
-      setHasSeenQuestion(true)
-    }
 
     // Setup all the synchronized values
     downloadGameData(cachedGameId).then((data) => {
@@ -57,7 +56,8 @@ export default function Stage() {
       gameData.setup("games/" + cachedGameId, (newValue) => {
         if (newValue.stage > gameData.state.stage) {
           setCountdown(maxTime)
-          setItem("hasSeenQuestion", "no")
+          setHasSeenQuestion(false)
+          setItem("hasSeenQuestion", "true")
         }
         if (newValue.stage > stages.length) router.push("/result")
       })
@@ -67,14 +67,6 @@ export default function Stage() {
       ready.setup("games" + cachedGameId + "/players/" + playerId + "/ready")
     })
   }, [])
-
-  // Used for anti-cheat; saves "yes" to memory when a new question is displayed
-  const [hasSeenQuestion, setHasSeenQuestion] = useState(false)
-  useEffect(() => {
-    if (countdown == 10) {
-      setItem("hasSeenQuestion", "yes")
-    }
-  }, [countdown])
 
   return question != null && myPlayerData != null ? (
     <Container maxWidth="sm">
@@ -114,21 +106,15 @@ export default function Stage() {
                   myPlayerData.state.name,
                   true
                 )
+                await changeAnswerStatus(
+                  gameData.state.gameId,
+                  myPlayerData.state.name,
+                  isAnswerCorrect(answer, question) ? "correct" : "wrong"
+                )
                 if (isAnswerCorrect(answer, question)) {
-                  await changeAnswerStatus(
-                    gameData.state.gameId,
-                    myPlayerData.state.name,
-                    "correct"
-                  )
                   await increaseNumberCorrect(
                     gameData.state.gameId,
                     myPlayerData.state.name
-                  )
-                } else {
-                  await changeAnswerStatus(
-                    gameData.state.gameId,
-                    myPlayerData.state.name,
-                    "wrong"
                   )
                 }
               }}
