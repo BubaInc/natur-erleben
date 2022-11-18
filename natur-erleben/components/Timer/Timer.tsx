@@ -22,8 +22,8 @@ export default function Timer({
     }
   }, [countdown])
   return (
-    <RenderIf condition={enabled}>
-      <Typography variant="h3">{countdown}</Typography>
-    </RenderIf>
+    // <RenderIf condition={enabled}>
+      <Typography variant="h3">{enabled?countdown:""}</Typography>
+    // </RenderIf>
   )
 }

@@ -36,7 +36,7 @@ export default function Stage() {
   const ready = useSync(false)
 
   // State for the timer
-  const maxTime = 10
+  const maxTime = 15
   const [countdown, setCountdown] = useState(maxTime)
 
   // Retrieve correct values for the question and the answers
