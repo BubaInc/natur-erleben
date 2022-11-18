@@ -88,13 +88,13 @@ const Home: NextPage = () => {
             <Typography variant="h2">Natur Erleben</Typography>
           </Box>
         </Grid>
-        <RenderIf condition={reconnect != ""}>
+        {/* <RenderIf condition={reconnect != ""}>
           <Grid item xs={12}>
             <Button onClick={() => onReconnectButtonClick()}>
               Wieder mit Spiel {reconnect} verbinden
             </Button>
           </Grid>
-        </RenderIf>
+        </RenderIf> */}
         <RenderIf condition={step === "start"}>
           <>
             <Grid item xs={12}>

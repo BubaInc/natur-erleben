@@ -76,6 +76,10 @@ export default function Stage() {
 
   return question != null && myPlayerData != null ? (
     <Container maxWidth="sm">
+      {/* The game id to be able to rejoin */}
+      <Typography variant="h5" sx={{ mb: 2 }}>
+        {gameData.state.gameId}
+      </Typography>
       {/* The title displaying the question */}
       <Typography variant="h2" sx={{ mb: 2 }}>
         {question.question}
