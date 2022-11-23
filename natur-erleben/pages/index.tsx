@@ -1,9 +1,4 @@
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import Container from "@mui/material/Container"
-import Grid from "@mui/material/Grid"
-import TextField from "@mui/material/TextField"
-import Typography from "@mui/material/Typography"
+import styles from "../styles/Home.module.css"
 import { get, push, set } from "firebase/database"
 import type { NextPage } from "next"
 import { useRouter } from "next/router"
@@ -19,6 +14,7 @@ import {
   uploadGameData,
 } from "../util/Firebase"
 import { getItem, init } from "../util/StorageHandler"
+import Button from "../components/Button"
 
 const Home: NextPage = () => {
   const router = useRouter()
@@ -81,77 +77,83 @@ const Home: NextPage = () => {
   }
 
   return (
-    <Container maxWidth="sm">
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <Typography variant="h2">Natur Erleben</Typography>
-          </Box>
-        </Grid>
-        {/* <RenderIf condition={reconnect != ""}>
-          <Grid item xs={12}>
-            <Button onClick={() => onReconnectButtonClick()}>
-              Wieder mit Spiel {reconnect} verbinden
-            </Button>
-          </Grid>
-        </RenderIf> */}
-        <RenderIf condition={step === "start"}>
-          <>
-            <Grid item xs={12}>
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={() => setStep("create")}
-              >
-                Spiel eröffnen
-              </Button>
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={() => setStep("join")}
-              >
-                Spiel beitreten
-              </Button>
-            </Grid>
-          </>
-        </RenderIf>
-        <RenderIf condition={step == "create" || step == "join"}>
-          <Grid item xs={12}>
-            <TextField
-              label="Name"
-              fullWidth
-              onChange={(e) => setPlayerName(e.target.value)}
-              error={invalidPlayerName}
-            ></TextField>
-          </Grid>
-          <RenderIf condition={step == "join"}>
-            <Grid item xs={12}>
-              <TextField
-                label="Spiel ID"
-                fullWidth
-                onChange={(e) => setGameId(e.target.value)}
-                error={invalidGameId}
-              ></TextField>
-            </Grid>
-          </RenderIf>
-        </RenderIf>
-        <Grid item xs={12}>
-          <SpinnerButton
-            fullWidth
-            job={onCreateGameClick}
-            disabled={
-              step == "create"
-                ? playerName == ""
-                : playerName == "" || gameId == ""
-            }
-          >
-            Weiter
-          </SpinnerButton>
-        </Grid>
-      </Grid>
-    </Container>
+    <div className={styles.container}>
+      <p className={styles.title}>Natur Erleben</p>
+      <div className={styles.mainContainer}>
+        <Button></Button>
+      </div>
+    </div>
+    // <Container maxWidth="sm">
+    //   <Grid container spacing={2}>
+    //     <Grid item xs={12}>
+    //       <Box sx={{ display: "flex", justifyContent: "center" }}>
+    //         <Typography variant="h2">Natur Erleben</Typography>
+    //       </Box>
+    //     </Grid>
+    //     {/* <RenderIf condition={reconnect != ""}>
+    //       <Grid item xs={12}>
+    //         <Button onClick={() => onReconnectButtonClick()}>
+    //           Wieder mit Spiel {reconnect} verbinden
+    //         </Button>
+    //       </Grid>
+    //     </RenderIf> */}
+    //     <RenderIf condition={step === "start"}>
+    //       <>
+    //         <Grid item xs={12}>
+    //           <Button
+    //             fullWidth
+    //             variant="contained"
+    //             onClick={() => setStep("create")}
+    //           >
+    //             Spiel eröffnen
+    //           </Button>
+    //         </Grid>
+    //         <Grid item xs={12}>
+    //           <Button
+    //             fullWidth
+    //             variant="contained"
+    //             onClick={() => setStep("join")}
+    //           >
+    //             Spiel beitreten
+    //           </Button>
+    //         </Grid>
+    //       </>
+    //     </RenderIf>
+    //     <RenderIf condition={step == "create" || step == "join"}>
+    //       <Grid item xs={12}>
+    //         <TextField
+    //           label="Name"
+    //           fullWidth
+    //           onChange={(e) => setPlayerName(e.target.value)}
+    //           error={invalidPlayerName}
+    //         ></TextField>
+    //       </Grid>
+    //       <RenderIf condition={step == "join"}>
+    //         <Grid item xs={12}>
+    //           <TextField
+    //             label="Spiel ID"
+    //             fullWidth
+    //             onChange={(e) => setGameId(e.target.value)}
+    //             error={invalidGameId}
+    //           ></TextField>
+    //         </Grid>
+    //       </RenderIf>
+    //     </RenderIf>
+    //     <Grid item xs={12}>
+    //       <SpinnerButton
+    //         fullWidth
+    //         job={onCreateGameClick}
+    //         disabled={
+    //           step == "create"
+    //             ? playerName == ""
+    //             : playerName == "" || gameId == ""
+    //         }
+    //       >
+    //         Weiter
+    //       </SpinnerButton>
+    //     </Grid>
+    //   </Grid>
+    // </Container>
   )
 }
 
