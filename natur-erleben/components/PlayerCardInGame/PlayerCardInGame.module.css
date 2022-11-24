@@ -11,3 +11,7 @@
   line-height: 24px;
   text-align: center;
 }
+
+.removePlayerButton {
+  margin-left: 20px;
+}

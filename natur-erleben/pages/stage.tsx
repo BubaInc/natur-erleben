@@ -72,24 +72,6 @@ export default function Stage() {
     });
   }, []);
 
-  // onClick={async () => {
-  //   // Remove that player
-  //   const playerId = findPlayerId(
-  //     gameData.state,
-  //     player.name
-  //   );
-  //   await remove(
-  //     reference(
-  //       path(
-  //         "games",
-  //         gameData.state.gameId,
-  //         "players",
-  //         playerId
-  //       )
-  //     )
-  //   );
-  // }}
-
   const { open, changeSlidey } = useSlidey();
 
   return question != null && myPlayerData != null ? (
@@ -165,38 +147,33 @@ export default function Stage() {
               .map((key) => gameData.state.players[key])
               .sort((a: Player, b: Player) => b.numberCorrect - a.numberCorrect)
               .map((player: Player, i: number) => (
-                <PlayerCardInGame player={player}></PlayerCardInGame>
+                <PlayerCardInGame
+                  gameData={gameData.state}
+                  host={
+                    gameData.state.host == myPlayerData.state.name &&
+                    player.name !== myPlayerData.state.name
+                  }
+                  player={player}
+                ></PlayerCardInGame>
               ))}
           </div>
-          <SpinnerButton
-            disabled={!isEveryoneReady(gameData.state)}
-            job={async () => {
-              await makeEveryoneUnready(gameData.state.gameId);
-              await nextStage(gameData.state.gameId);
-            }}
+          <RenderIf
+            condition={ready && gameData.state.host == myPlayerData.state.name}
           >
-            Nächste Station
-          </SpinnerButton>
+            <SpinnerButton
+              disabled={!isEveryoneReady(gameData.state)}
+              job={async () => {
+                await makeEveryoneUnready(gameData.state.gameId);
+                await nextStage(gameData.state.gameId);
+              }}
+            >
+              Nächste Station
+            </SpinnerButton>
+          </RenderIf>
         </RenderIf>
       </Slidey>
     </div>
   ) : (
-    // <Container maxWidth="sm">
-    //   {/* Display the answers if the user has not answered yet */}
-    //   <RenderIf condition={answerStatus.state == "correct"}>
-    //     <Alert severity="success">Richtige Antwort!</Alert>
-    //   </RenderIf>
-    //   <RenderIf condition={answerStatus.state == "wrong"}>
-    //     <Alert severity="error">Falsche Antwort!</Alert>
-    //   </RenderIf>
-    //   <RenderIf condition={answerStatus.state == "timeout"}>
-    //     <Alert severity="error">Die Zeit ist abgelaufen!</Alert>
-    //   </RenderIf>
-    //   <RenderIf
-    //     condition={ready && gameData.state.host == myPlayerData.state.name}
-    //   >
-    //   </RenderIf>
-    // </Container>
     <></>
   );
 }

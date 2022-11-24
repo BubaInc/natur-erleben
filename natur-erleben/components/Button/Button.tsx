@@ -5,11 +5,13 @@ export default function Button({
   className,
   children,
   disabled,
+  red,
 }: {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   className?: string;
   children?: any;
   disabled?: boolean;
+  red?: boolean;
 }) {
   return (
     <>
@@ -23,7 +25,7 @@ export default function Button({
           text-align: center;
           color: ${disabled ? "#C2C2C2" : "#FFFFFF"};
 
-          background: ${disabled ? "#D8D8D8" : "#68c9ff"};
+          background: ${red ? "red" : disabled ? "#D8D8D8" : "#68c9ff"};
           border-radius: 50px;
           padding: 10px 30px;
           border: none;
