@@ -1,15 +1,15 @@
-import { useState } from "react"
-import CircularProgress from "@mui/material/CircularProgress"
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
+import { useState } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
+import Button from "../Button";
 
 type Props = {
-  disabled: boolean
-  job: () => Promise<void>
-  children: any
-  onComplete?: () => void
-  fullWidth?: boolean
-}
+  disabled: boolean;
+  job: () => Promise<void>;
+  children: any;
+  onComplete?: () => void;
+  fullWidth?: boolean;
+};
 
 export default function SpinnerButton({
   disabled,
@@ -18,7 +18,7 @@ export default function SpinnerButton({
   onComplete,
   fullWidth,
 }: Props) {
-  const [showSpinner, setShowSpinner] = useState(false)
+  const [showSpinner, setShowSpinner] = useState(false);
   return (
     <>
       {showSpinner ? (
@@ -33,14 +33,11 @@ export default function SpinnerButton({
         </Box>
       ) : (
         <Button
-          type="submit"
-          fullWidth={fullWidth}
-          variant="contained"
           onClick={async () => {
-            setShowSpinner(true)
-            if (job) await job()
-            setShowSpinner(false)
-            if (onComplete) onComplete()
+            setShowSpinner(true);
+            if (job) await job();
+            setShowSpinner(false);
+            if (onComplete) onComplete();
           }}
           disabled={disabled}
         >
@@ -48,5 +45,5 @@ export default function SpinnerButton({
         </Button>
       )}
     </>
-  )
+  );
 }

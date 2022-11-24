@@ -2,7 +2,7 @@ import styles from "../styles/Home.module.css";
 import { get, push, set } from "firebase/database";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import RenderIf from "../components/RenderIf";
 import SpinnerButton from "../components/SpinnerButton";
 import {
@@ -13,31 +13,23 @@ import {
   reference,
   uploadGameData,
 } from "../util/Firebase";
-import { getItem, init } from "../util/StorageHandler";
+import { init } from "../util/StorageHandler";
 import Button from "../components/Button";
 import Input from "../components/Input";
+import Slidey from "../components/Slidey";
+import { useSlidey } from "../components/Slidey/Slidey";
 
 const Home: NextPage = () => {
   const router = useRouter();
   // Stores the player name and whether or not it is invalid
   const [playerName, setPlayerName] = useState("");
-  const [invalidPlayerName, setInvalidPlayerName] = useState(false);
+  const [invalidPlayerName, setInvalidPlayerName] = useState("");
   // Stores the game id and whether or not it is invalid
   const [gameId, setGameId] = useState("");
-  const [invalidGameId, setInvalidGameId] = useState(false);
+  const [invalidGameId, setInvalidGameId] = useState("");
   // The state that identifies the current step in the create / join game process
   type Step = "start" | "create" | "join";
   const [step, setStep] = useState<Step>("start");
-  // Stores the cached game id
-  const [reconnect, setReconnect] = useState("");
-
-  // Check whether there is a cached game id
-  useEffect(() => {
-    const cachedId = getItem("gameId");
-    if (cachedId != null) {
-      setReconnect(cachedId);
-    }
-  }, []);
 
   // Gets called whenever the user clicks the "continue" button
   const onCreateGameClick = async () => {
@@ -52,10 +44,10 @@ const Home: NextPage = () => {
     } else if (step == "join") {
       // Check if the entered values are valid
       if (!(await isGameIdValid(gameId))) {
-        setInvalidGameId(true);
+        setInvalidGameId("Diese ID ist ungültig.");
         return;
       } else if (!(await isPlayerNameAvailable(playerName, gameId))) {
-        setInvalidPlayerName(true);
+        setInvalidPlayerName("Dieser Spielername ist schon vergeben.");
         return;
       }
       // Join the game
@@ -68,40 +60,46 @@ const Home: NextPage = () => {
     }
   };
 
-  const onReconnectButtonClick = async () => {
-    const runningGameData = await downloadGameData(reconnect);
-    if (runningGameData.stage == 0) {
-      router.push("/lobby");
-    } else {
-      router.push("/stage");
-    }
-  };
-
-  let view;
-  if (step === "create") {
-    view = <></>;
-  } else if (step === "join") {
-    view = <></>;
-  } else {
-    view = (
-      <>
-        <Button onClick={() => setStep("create")} className={styles.menuButton}>
-          SPIEL ERÖFFNEN
-        </Button>
-        <Button onClick={() => setStep("join")} className={styles.menuButton}>
-          SPIEL BEITRETEN
-        </Button>
-        <Input placeholder="Buba"></Input>
-      </>
-    );
-  }
+  const { open, changeSlidey } = useSlidey();
 
   return (
     <div className={styles.container}>
       <p className={styles.title}>Natur Erleben</p>
-      <div className={styles.mainContainer}>{view}</div>
+      <Slidey open={open}>
+        <RenderIf condition={step === "start"}>
+          <Button
+            onClick={() => changeSlidey(() => setStep("create"))}
+            className={styles.menuButton}
+          >
+            SPIEL ERÖFFNEN
+          </Button>
+          <Button
+            onClick={() => changeSlidey(() => setStep("join"))}
+            className={styles.menuButton}
+          >
+            SPIEL BEITRETEN
+          </Button>
+        </RenderIf>
+        <RenderIf condition={step === "join"}>
+          <Input setState={setPlayerName} placeholder="Spielername" />
+          <Input setState={setGameId} placeholder="Spiel ID" />
+        </RenderIf>
+        <RenderIf condition={step === "create" || step === "join"}>
+          <Input setState={setPlayerName} placeholder="Spielername" />
+          <SpinnerButton
+            fullWidth
+            job={onCreateGameClick}
+            disabled={
+              step == "create"
+                ? playerName == ""
+                : playerName == "" || gameId == ""
+            }
+          >
+            Weiter
+          </SpinnerButton>
+        </RenderIf>
+      </Slidey>
     </div>
-    // <Container maxWidth="sm">
     //   <Grid container spacing={2}>
     //     <Grid item xs={12}>
     //       <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -129,20 +127,9 @@ const Home: NextPage = () => {
     //       </RenderIf>
     //     </RenderIf>
     //     <Grid item xs={12}>
-    //       <SpinnerButton
-    //         fullWidth
-    //         job={onCreateGameClick}
-    //         disabled={
-    //           step == "create"
-    //             ? playerName == ""
-    //             : playerName == "" || gameId == ""
-    //         }
-    //       >
-    //         Weiter
-    //       </SpinnerButton>
+
     //     </Grid>
     //   </Grid>
-    // </Container>
   );
 };
 
