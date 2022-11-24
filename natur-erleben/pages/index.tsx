@@ -81,11 +81,18 @@ const Home: NextPage = () => {
           </Button>
         </RenderIf>
         <RenderIf condition={step === "join"}>
-          <Input setState={setPlayerName} placeholder="Spielername" />
-          <Input setState={setGameId} placeholder="Spiel ID" />
+          <Input
+            setState={setGameId}
+            placeholder="Spiel ID"
+            error={invalidGameId}
+          />
         </RenderIf>
         <RenderIf condition={step === "create" || step === "join"}>
-          <Input setState={setPlayerName} placeholder="Spielername" />
+          <Input
+            setState={setPlayerName}
+            placeholder="Spielername"
+            error={invalidPlayerName}
+          />
           <SpinnerButton
             fullWidth
             job={onCreateGameClick}
@@ -100,36 +107,6 @@ const Home: NextPage = () => {
         </RenderIf>
       </Slidey>
     </div>
-    //   <Grid container spacing={2}>
-    //     <Grid item xs={12}>
-    //       <Box sx={{ display: "flex", justifyContent: "center" }}>
-    //         <Typography variant="h2">Natur Erleben</Typography>
-    //       </Box>
-    //     </Grid>
-    //     <RenderIf condition={step == "create" || step == "join"}>
-    //       <Grid item xs={12}>
-    //         <TextField
-    //           label="Name"
-    //           fullWidth
-    //           onChange={(e) => setPlayerName(e.target.value)}
-    //           error={invalidPlayerName}
-    //         ></TextField>
-    //       </Grid>
-    //       <RenderIf condition={step == "join"}>
-    //         <Grid item xs={12}>
-    //           <TextField
-    //             label="Spiel ID"
-    //             fullWidth
-    //             onChange={(e) => setGameId(e.target.value)}
-    //             error={invalidGameId}
-    //           ></TextField>
-    //         </Grid>
-    //       </RenderIf>
-    //     </RenderIf>
-    //     <Grid item xs={12}>
-
-    //     </Grid>
-    //   </Grid>
   );
 };
 
