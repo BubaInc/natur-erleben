@@ -1,4 +1,4 @@
-import { get, remove, set } from "firebase/database";
+import { get, set } from "firebase/database";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import RenderIf from "../components/RenderIf";
@@ -49,7 +49,7 @@ export default function Stage() {
     const cachedName = getItem("name");
     const cachedGameId = getItem("gameId");
     const cachedHasSeenQuestion = getItem("hasSeenQuestion");
-    if (cachedHasSeenQuestion == "true") setHasSeenQuestion(true);
+    setHasSeenQuestion(cachedHasSeenQuestion == "true");
     if (!cachedName || !cachedGameId) return;
 
     // Setup all the synchronized values

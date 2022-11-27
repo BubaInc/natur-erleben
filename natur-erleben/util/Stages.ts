@@ -2,6 +2,8 @@ export type Question = {
   question: string
   answers: string[]
   correct: string[] | string
+  type: "multipleChoice"| "img" | "estimate"
+  correctEstimate: number
 }
 
 export const stages: Question[] = [
@@ -9,22 +11,26 @@ export const stages: Question[] = [
     question: "In was lässt sich ein Ahornblatt unterteilen?",
     answers: ["Lappen", "Finger", "Spitzen", "Wischer"],
     correct: "Lappen",
+    type: "multipleChoice", correctEstimate: -1,
   },
   {
     question: "Ist der Ahorn giftig?",
     answers: ["Ja", "Nur für Nagetiere", "Nur für Pferde & Esel", "Nein"],
     correct: "Nur für Pferde & Esel",
+    type: "multipleChoice", correctEstimate: -1,
   },
   {
     question: "Wo ist der Ginkgo beheimatet? Dort ist er sogar Nationalbaum!",
     answers: ["China", "Thailand", "Dänemark", "Madagaskar"],
     correct: "China",
+    type: "multipleChoice", correctEstimate: -1,
   },
   {
     question:
       "Bei was soll der Ginkgo laut traditioneller chinesischer Medizin helfen?",
     answers: ["Rückenschmerzen", "Gedächtnisprobleme", "Haarausfall", "Karies"],
     correct: "Gedächtnisprobleme",
+    type: "multipleChoice", correctEstimate: -1,
   },
   {
     question: "Wieso werden in Parks fast nur männliche Ginkgos angebaut?",
@@ -35,6 +41,7 @@ export const stages: Question[] = [
       "die Früchte der Weibchen sind giftig",
     ],
     correct: "die Früchte der Weibchen stinken",
+    type: "multipleChoice", correctEstimate: -1,
   },
   {
     question: "Ist die Rosskastanie essbar?",
@@ -45,16 +52,19 @@ export const stages: Question[] = [
       "Nein, sie ist giftig",
     ],
     correct: "Nein, sie ist giftig",
+    type: "multipleChoice", correctEstimate: -1,
   },
   {
     question: "Was kann man aus Kastanien herstellen?",
     answers: ["Waschmittel", "Hautcreme", "Zahnpasta", "Deodorant"],
     correct: "Waschmittel",
+    type: "multipleChoice", correctEstimate: -1,
   },
   {
     question: "Sind Zieräpfel giftig?",
     answers: ["Ja", "Nein, jedoch ja für Haustiere", "Nein"],
     correct: "Nein",
+    type: "multipleChoice", correctEstimate: -1,
   },
   {
     question:
@@ -66,12 +76,14 @@ export const stages: Question[] = [
       "18. Jahrhundert",
     ],
     correct: "12. Jahrhundert",
+    type: "multipleChoice", correctEstimate: -1,
   },
   {
     question:
       "Welchen Nahrungsmitteln schauen die Samen/Früchte der Robinie ähnlich?",
     answers: ["Walnüsse", "Bohnenhülsen", "Kirschen", "Äpfeln"],
     correct: "Bohnenhülsen",
+    type: "multipleChoice", correctEstimate: -1,
   },
   {
     question: "Die Pflanzung der Robinie ist umstritten. Wieso?",
@@ -82,6 +94,7 @@ export const stages: Question[] = [
       "Sie breitet sich aus & senkt die Artenvielfalt (=>invasiv)",
     ],
     correct: "Sie breitet sich aus & senkt die Artenvielfalt (=>invasiv)",
+    type: "multipleChoice", correctEstimate: -1,
   },
   {
     question:
@@ -93,11 +106,13 @@ export const stages: Question[] = [
       "um Insekten anzulocken",
     ],
     correct: "um sich selbst zu Düngen",
+    type: "multipleChoice", correctEstimate: -1,
   },
   {
     question: "Was wurde aus den Früchten der Eberesche hergestellt?",
     answers: ["Süßstoff", "Gift gegen Schädlinge", "Farbe", "Duftstoffe"],
     correct: "Süßstoff",
+    type: "multipleChoice", correctEstimate: -1,
   },
   {
     question: "Woher kommen die Namen Vogelbeere bzw. Eberesche? (2 Anworten)",
@@ -108,6 +123,7 @@ export const stages: Question[] = [
       "Die Beeren sind höchst giftig für Vögel",
     ],
     correct: ["Die Blätter ähneln denen der Esche", "Vögel lieben die Früchte"],
+    type: "multipleChoice", correctEstimate: -1,
   },
   {
     question: "Sind Vogelbeeren giftig?",
@@ -116,6 +132,7 @@ export const stages: Question[] = [
       "Nein, jedoch ja für Haustiere",
     ],
     correct: "Nein, jedoch ja für Haustiere",
+    type: "multipleChoice", correctEstimate: -1,
   },
   {
     question: "Die Linde ist für Insekten sehr wichtig. Wieso?",
@@ -124,7 +141,7 @@ export const stages: Question[] = [
       "sie hat 10-mal so viele Blüten wie die meisten anderen Laubbäume",
       "sie zieht viele seltene Arten an",
     ],
-    correct: "sie ist ein Sommerblüher, was sehr selten ist",
+    correct: "sie ist ein Sommerblüher, was sehr selten ist",type: "multipleChoice", correctEstimate: -1,
   },
   {
     question: "Wobei hilft Lindenblütentee?",
@@ -135,16 +152,19 @@ export const stages: Question[] = [
       "Konzentrationsschwächen",
     ],
     correct: "Erkältung",
+    type: "multipleChoice", correctEstimate: -1,
   },
   {
     question:
       "Die Dorflinde, welche früher das Zentrum eines Dorfs darstellte, hatte auch folgende Namen:",
     answers: ["Festbaum", "Gerichtslinde", "Hochzeitslinde", "Tanzlinde"],
     correct: ["Gerichtslinde", "Tanzlinde"],
+    type: "multipleChoice", correctEstimate: -1,
   },
   {
     question: "Was wurde früher in Notzeiten aus Eicheln hergestellt?",
     answers: ["Seife", "Öl", "Kaffee", "Mehl"],
     correct: ["Kaffee", "Mehl"],
+    type: "multipleChoice", correctEstimate: -1,
   },
 ]
