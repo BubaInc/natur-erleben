@@ -148,6 +148,7 @@ export default function Stage() {
               .sort((a: Player, b: Player) => b.numberCorrect - a.numberCorrect)
               .map((player: Player, i: number) => (
                 <PlayerCardInGame
+                  key={i}
                   gameData={gameData.state}
                   host={
                     gameData.state.host == myPlayerData.state.name &&
