@@ -20,6 +20,7 @@ import Slidey from "../components/Slidey";
 import { useSlidey } from "../components/Slidey/Slidey";
 import Button from "../components/Button";
 import PlayerCardInGame from "../components/PlayerCardInGame";
+import Image from "next/image";
 
 export default function Stage() {
   const router = useRouter();
@@ -79,7 +80,9 @@ export default function Stage() {
       <p className={styles.title}>ID: {gameData.state.gameId}</p>
       <Slidey open={open}>
         <p className={styles.question}>{question.question}</p>
-        <RenderIf condition={answerStatus.state === "wrong"}>
+        <RenderIf
+          condition={answerStatus.state === "wrong" && question.type === "img"}
+        >
           <p className={styles.wrongAnswer}>
             Falsch! Richtige Antwort: {question.correct}
           </p>
@@ -135,7 +138,11 @@ export default function Stage() {
                   }
                 }}
               >
-                <p>{answer}</p>
+                {question.type === "img" ? (
+                  <Image src={answer} width="143" height="100" />
+                ) : (
+                  <p>{answer}</p>
+                )}
               </Button>
             ))}
           </div>

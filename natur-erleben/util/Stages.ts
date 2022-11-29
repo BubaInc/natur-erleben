@@ -8,10 +8,10 @@ export type Question = {
 
 export const stages: Question[] = [
   {
-    question: "In was lässt sich ein Ahornblatt unterteilen?",
-    answers: ["Lappen", "Finger", "Spitzen", "Wischer"],
-    correct: "Lappen",
-    type: "multipleChoice", correctEstimate: -1,
+    question: "Was ist das Gingko Blatt?",
+    answers: ["/Gingko1.jpg", "/Gingko2.jpg", "/Gingko3.jpg", "/Gingko4.jpg"],
+    correct: "/Gingko4.jpg",
+    type: "img", correctEstimate: -1,
   },
   {
     question: "Ist der Ahorn giftig?",
