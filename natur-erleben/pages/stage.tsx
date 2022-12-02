@@ -49,6 +49,8 @@ export default function Stage() {
 
   const [hasSeenQuestion, setHasSeenQuestion] = useState(false);
 
+  const [canClickAnswerButtons, setCanClickAnswerButtons] = useState(false);
+
   // Sets up data synchronization after page load
   useEffect(() => {
     // Retrieve cached values
@@ -62,9 +64,13 @@ export default function Stage() {
     downloadGameData(cachedGameId).then((data) => {
       stage.setup(path("games", cachedGameId, "stage"), (newValue) => {
         if (newValue > stage.state) {
+          setCanClickAnswerButtons(false);
           setCountdown(maxTime);
           setItem("hasSeenQuestion", "true");
           setHasSeenQuestion(false);
+          setTimeout(() => {
+            setCanClickAnswerButtons(true);
+          }, 1250);
         }
         if (
           newValue >
@@ -146,6 +152,7 @@ export default function Stage() {
                   <Button
                     key={i}
                     disabled={hasSeenQuestion}
+                    disabledWithoutColoring={!canClickAnswerButtons}
                     onClick={async () => {
                       await changeReady(
                         gameData.state.gameId,

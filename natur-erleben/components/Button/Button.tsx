@@ -7,6 +7,7 @@ export default function Button({
   disabled,
   red,
   onlyDisabledColoring,
+  disabledWithoutColoring,
 }: {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   className?: string;
@@ -14,7 +15,16 @@ export default function Button({
   disabled?: boolean;
   red?: boolean;
   onlyDisabledColoring?: boolean;
+  disabledWithoutColoring?: boolean;
 }) {
+  const isDisabled = () => {
+    if (disabled == undefined && disabledWithoutColoring == undefined)
+      return false;
+    return disabled || disabledWithoutColoring;
+  };
+
+  const calculatedDisabled = isDisabled();
+
   return (
     <>
       <style jsx>{`
@@ -42,7 +52,7 @@ export default function Button({
         }
       `}</style>
       <button
-        disabled={disabled === undefined ? false : disabled}
+        disabled={calculatedDisabled}
         onClick={onClick}
         className={className + " " + "button"}
       >
