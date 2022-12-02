@@ -13,7 +13,7 @@ import PlayerCard from "../components/PlayerCard";
 export default function Lobby() {
   const router = useRouter();
   const [players, setPlayers] = useState<string[]>([]);
-  const [gameData, setGameData] = useState(new GameData("", "", -1, {}));
+  const [gameData, setGameData] = useState(new GameData("", "", -1, {}, "6"));
   const [myName, setMyName] = useState("");
 
   useEffect(() => {

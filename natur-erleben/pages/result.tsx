@@ -7,7 +7,7 @@ import { useSlidey } from "../components/Slidey/Slidey";
 import PlayerCardInGame from "../components/PlayerCardInGame";
 
 export default function Result() {
-  const [gameData, setGameData] = useState(new GameData("", "", -1, {}));
+  const [gameData, setGameData] = useState(new GameData("", "", -1, {}, "6"));
   useEffect(() => {
     const cachedGameId = getItem("gameId");
     if (!cachedGameId) return;
