@@ -31,14 +31,17 @@ const Home: NextPage = () => {
   type Step = "start" | "create" | "join";
   const [step, setStep] = useState<Step>("start");
 
-  const [sixthGrade, setSixthGrade] = useState(false);
+  const [sixthGrade, setSixthGrade] = useState(true);
 
   // Gets called whenever the user clicks the "continue" button
   const onCreateGameClick = async () => {
     if (step == "create") {
       // Create a new game
       const id = await generateNewGameId();
-      await uploadGameData(id, new GameData(id, playerName, 0, {}));
+      await uploadGameData(
+        id,
+        new GameData(id, playerName, 0, {}, sixthGrade ? "6" : "8")
+      );
       const newPlayer = push(reference("games/" + id + "/players"));
       await set(newPlayer, new Player(playerName, 0, false, "none"));
       init(playerName, id);
@@ -101,11 +104,9 @@ const Home: NextPage = () => {
             error={invalidPlayerName}
           />
           <div className={styles.gradeContainer}>
-            <Button disabled={!sixthGrade} onClick={() => setSixthGrade(true)}>
-              6. Klasse
-            </Button>
-            <Button disabled={sixthGrade} onClick={() => setSixthGrade(false)}>
-              8. Klasse
+            <p>Du hast Klasse {sixthGrade ? "6" : "8"} ausgewählt</p>
+            <Button onClick={() => setSixthGrade(!sixthGrade)}>
+              Klasse wechseln
             </Button>
           </div>
           <SpinnerButton

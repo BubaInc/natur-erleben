@@ -27,7 +27,7 @@ export default function Stage() {
   const router = useRouter();
 
   // Values that get synchronized
-  const gameData = useSync(new GameData("", "", 1, {}));
+  const gameData = useSync(new GameData("", "", 1, {}, "6"));
   const myPlayerData = useSync(new Player("", 0, false, "none"));
   const stage = useSync(0);
   const answerStatus = useSync<"none" | "correct" | "wrong" | "timeout">(
@@ -40,7 +40,11 @@ export default function Stage() {
   const [countdown, setCountdown] = useState(maxTime);
 
   // Retrieve correct values for the question and the answers
-  const question = stages[stage.state - 1];
+  let question: Question =
+    gameData.state.grade === "6"
+      ? stages6[stage.state - 1]
+      : stages8[stage.state - 1];
+
   const answers = question ? question.answers : [];
 
   const [hasSeenQuestion, setHasSeenQuestion] = useState(false);
@@ -62,7 +66,11 @@ export default function Stage() {
           setItem("hasSeenQuestion", "true");
           setHasSeenQuestion(false);
         }
-        if (newValue > stages.length) router.push("/result");
+        if (
+          newValue >
+          (gameData.state.grade === "6" ? stages6.length : stages8.length)
+        )
+          router.push("/result");
       });
       const playerId = findPlayerId(data, cachedName);
       myPlayerData.setup(path("games", cachedGameId, "players", playerId));
