@@ -8,6 +8,7 @@ export default function Button({
   red,
   onlyDisabledColoring,
   disabledWithoutColoring,
+  small,
 }: {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   className?: string;
@@ -16,6 +17,7 @@ export default function Button({
   red?: boolean;
   onlyDisabledColoring?: boolean;
   disabledWithoutColoring?: boolean;
+  small?: boolean;
 }) {
   const isDisabled = () => {
     if (disabled == undefined && disabledWithoutColoring == undefined)
@@ -25,6 +27,17 @@ export default function Button({
 
   const calculatedDisabled = isDisabled();
 
+  const calculateBackground = () => {
+    if (red) return "red";
+    else if (small) return "#3bbf51";
+    else {
+      if (disabled || onlyDisabledColoring) return "#D8D8D8";
+      else return "#68c9ff";
+    }
+  };
+
+  const calculatedBackground = calculateBackground();
+
   return (
     <>
       <style jsx>{`
@@ -32,18 +45,15 @@ export default function Button({
           font-family: "Inter";
           font-style: normal;
           font-weight: 400;
-          font-size: 20px;
+          font-size: ${small ? "17px" : "20px"};
           line-height: 24px;
           text-align: center;
           color: ${disabled || onlyDisabledColoring ? "#C2C2C2" : "#FFFFFF"};
 
-          background: ${red
-            ? "red"
-            : disabled || onlyDisabledColoring
-            ? "#D8D8D8"
-            : "#68c9ff"};
-          border-radius: 50px;
-          padding: 10px 30px;
+          background: ${calculatedBackground};
+          border-radius: ${small ? "40px" : "50px"};
+          ${small ? "width: fit-content;" : ""}
+          padding: ${small ? "3px 10px" : "10px 30px"};
           border: none;
         }
 

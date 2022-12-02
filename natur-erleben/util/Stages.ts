@@ -56,6 +56,11 @@ export const stages6: Question[] = [
     "August bis Januar"
   ),
   makeMultipleChoice(
+    "Wie viele Zierapfelarten gibt es?",
+    ["300", "400", "500", "600"],
+    "500"
+  ),
+  makeMultipleChoice(
     "Sind Zieräpfel essbar?",
     ["Nicht für Säugetiere", "Nicht für Wiederkäuer", "Nein", "Ja"],
     "Ja"
@@ -86,6 +91,11 @@ export const stages6: Question[] = [
     "männlich, weiblich und zwittrig"
   ),
   makeMultipleChoice(
+    "Wie viele Staubblätter hat eine Blüte des Spitzahorns?",
+    ["5", "20", "3", "8"],
+    "8"
+  ),
+  makeMultipleChoice(
     "Woran erinnert die Frucht des Spitzahorns?",
     ["Flügel", "Raupen", "Dreiecke", "Kämme"],
     "Flügel"
@@ -109,6 +119,11 @@ export const stages6: Question[] = [
     "Hat der Ginko eine medizinische Anwendung?",
     ["Demenz", "Schizophrenie", "Herzschwäche", "Übelkeit"],
     "Demenz"
+  ),
+  makeImage(
+    "Welches der Bilder zeigt ein Gingkoblatt?",
+    ["/Gingko1.jpg", "/Gingko2.jpg", "/Gingko3.jpg", "/Gingko4.jpg"],
+    "/Gingko4.jpg"
   ),
   makeMultipleChoice(
     "Welchen anderen Nutzen hat der Ginkgo?",
@@ -145,6 +160,11 @@ export const stages6: Question[] = [
     ["samtig", "klebrig", "stachelig", "rau"],
     "stachelig"
   ),
+  makeImage(
+    "Welches der Bilder zeigt ein Rosskastanienblatt?",
+    ["/Gingko1.jpg", "/Gingko2.jpg", "/Gingko3.jpg", "/Gingko4.jpg"],
+    "/Gingko1.jpg"
+  ),
   makeMultipleChoice(
     "Die Zwetschge ist eine Unterart …",
     ["der Rose", "des Pfirsichs", "der Kastanie", "der Pflaume"],
@@ -159,6 +179,11 @@ export const stages6: Question[] = [
       "abhängig vom Baum entweder alle weiblich oder alle männlich",
     ],
     "zwittrig"
+  ),
+  makeMultipleChoice(
+    "Wie viele Zwetschgenarten gibt es in Europa?",
+    ["mehr als 100", "weniger als 30", "50", "70"],
+    "mehr als 100"
   ),
   makeMultipleChoice("Hat die Zwetschge Dornen?", ["Ja", "Nein"], "Ja"),
   makeMultipleChoice(
@@ -175,6 +200,11 @@ export const stages6: Question[] = [
     "Für wen sind Felsenbirnen wichtige Speisepflanzen?",
     ["Schmetterlinge", "Rehe", "Würmer", "Mücken"],
     "Schmetterlinge"
+  ),
+  makeImage(
+    "Welches der Bilder zeigt ein Blatt der Felsenbirne?",
+    ["/Gingko1.jpg", "/Gingko2.jpg", "/Gingko3.jpg", "/Gingko4.jpg"],
+    "/Gingko3.jpg"
   ),
   makeMultipleChoice(
     "Was hat die Felsenbirne mit dem Apfel gemein?",

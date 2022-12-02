@@ -118,7 +118,7 @@ const Home: NextPage = () => {
             <p className={styles.gradeText}>
               Du hast Klasse {sixthGrade ? "6" : "8"} ausgewählt
             </p>
-            <Button onClick={() => setSixthGrade(!sixthGrade)}>
+            <Button small onClick={() => setSixthGrade(!sixthGrade)}>
               Klasse wechseln
             </Button>
           </div>
