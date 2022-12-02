@@ -1,0 +1,236 @@
+{
+    "Frage":"X?",
+    "Antworten":[
+    "F",
+    "F",
+    "W",
+    "F",
+    ],
+    "Richtig":"W"
+}
+{
+    "Frage":"Zu welchen Zeiten sind Früchte am Zierapfel zu sehen?",
+    "Antworten":[
+    "Juli bis Oktober",
+    "August bis Januar",
+    "März bis August",
+    "August bis September",
+    ],
+    "Richtig":"August bis Januar"
+}
+{
+    "Frage":"Sind Zieräpfel essbar?",
+    "Antworten":[
+    "Nicht für Säugetiere",
+    "Nicht für Wiederkäuer",
+    "Nein",
+    "Ja",
+    ],
+    "Richtig":"Ja"
+}
+{
+    "Frage":"Welche Farben haben die Blüten des Zierapfels?",
+    "Antworten":[
+    "Weiß",
+    "Gelb und orange",
+    "Weiß, rosa und rot",
+    "Grün",
+    ],
+    "Richtig":"Weiß, rosa und rot"
+}
+{
+    "Frage":"Warum ist der Spitzahorn besonders beliebt in Parks und Alleen?",
+    "Antworten":[
+    "Er hat besonders auffällige Früchte.",
+    "Er wandelt besonders viel CO2 in Sauerstoff um.",
+    "Er duftet sehr gut."
+    "Er grünt relativ früh.",
+    ],
+    "Richtig":"Er grünt relativ früh."
+}
+{
+    "Frage":"Welches Geschlecht haben die einzelnen Blüten eines Blütenstands?",
+    "Antworten":[
+    "entweder alle männlich oder alle weiblich",
+    "sowohl männlich als auch weiblich",
+    "männlich, weiblich und zwittrig",
+    "nur zwittrig",
+    ],
+    "Richtig":"männlich, weiblich und zwittrig"
+}
+{
+    "Frage":"Woran erinnert die Frucht des Spitzahorns?",
+    "Antworten":[
+    "Flügel",
+    "Raupen",
+    "Dreiecke",
+    "Kämme",
+    ],
+    "Richtig":"Flügel"
+}
+{
+    "Frage":"Aus welchem Land kommt der Ginko?",
+    "Antworten":[
+    "Kanada",
+    "China",
+    "Indien",
+    "Japan",
+    ],
+    "Richtig":"China"
+}
+{
+    "Frage":"Was macht den Ginkgo so besonders?",
+    "Antworten":[
+    "Er braucht ein sehr spezielles Klima.",
+    "Er ist sehr selten (weniger als 10000 Exemplare).",
+    "Er ist ein lebendes Fossil.",
+    "Er blüht das ganze Jahr",
+    ],
+    "Richtig":"Er ist ein lebendes Fossil."
+}
+{
+    "Frage":"Hat der Ginko eine medizinische Anwendung?",
+    "Antworten":[
+    "Demenz",
+    "Schizophrenie",
+    "Herzschwäche",
+    "Übelkeit",
+    ],
+    "Richtig":"Demenz"
+}
+{
+    "Frage":"Welchen anderen Nutzen hat der Ginkgo?",
+    "Antworten":[
+    "gutes Holz für Möbel",
+    "verhindert Erdrutsche",
+    "Papierherstellung",
+    "Samen sind eine Delikatesse",
+    ],
+    "Richtig":"Samen sind eine Delikatesse"
+}
+{
+    "Frage":"Wozu wurden Rosskastanienschalen und - blättern im Mittelalter genutzt?",
+    "Antworten":[
+    "als Heilmittel gegen Husten",
+    "zum Färben von Wolle",
+    "zum Würzen",
+    "Als Talismane",
+    ],
+    "Richtig":"zum Färben von Wolle"
+}
+{
+    "Frage":"Welche medizinische Wirkung haben Rosskastanien?",
+    "Antworten":[
+    "gefäßstärkend und entzündungshemmend",
+    "reguliert Blutzucker",
+    "hilft bei blauen Flecken",
+    "wirkt präventiv gegen Menstruationsbeschwerden",
+    ],
+    "Richtig":"gefäßstärkend und entzündungshemmend"
+}
+{
+    "Frage":"Die Schale der Samen ist wie beschaffen?",
+    "Antworten":[
+    "samtig",
+    "klebrig",
+    "stachelig",
+    "rau",
+    ],
+    "Richtig":"stachelig"
+}
+{
+    "Frage":"Die Zwetschge ist eine Unterart …",
+    "Antworten":[
+    "der Rose",
+    "des Pfirsichs",
+    "der Kastanie",
+    "der Pflaume",
+    ],
+    "Richtig":"der Pflaume"
+}
+{
+    "Frage":"Die Blüten sind...",
+    "Antworten":[
+    "rot",
+    "zwittrig",
+    "männlich und weiblich",
+    "abhängig vom Baum entweder alle weiblich oder alle männlich",
+    ],
+    "Richtig":"zwittrig"
+}
+{
+    "Frage":"Hat die Zwetschge Dornen?",
+    "Antworten":[
+    "Ja",
+    "Nein",
+    ],
+    "Richtig":"Ja"
+}
+{
+    "Frage":"Kann man die Früchte der Felsenbirne essen?",
+    "Antworten":[
+    "Nein",
+    "Sie sind nur für Vögel genießbar.",
+    "Ja",
+    "Hat noch keiner ausprobiert.",
+    ],
+    "Richtig":"Ja"
+}
+{
+    "Frage":"Für wen sind Felsenbirnen wichtige Speisepflanzen?",
+    "Antworten":[
+    "Schmetterlinge",
+    "Rehe",
+    "Würmer",
+    "Mücken",
+    ],
+    "Richtig":"Schmetterlinge"
+}
+{
+    "Frage":"Was hat die Felsenbirne mit dem Apfel gemein?",
+    "Antworten":[
+    "die Blattform",
+    "die Blütenform",
+    "ein Pflanzengift im Kern",
+    "die mückenabweisenden Düfte",
+    ],
+    "Richtig":"ein Pflanzengift im Kern"
+}
+{
+    "Frage":"Wie alt kann die Vogelkirsche werden?",
+    "Antworten":[
+    "50-60 Jahre",
+    "130-150 Jahre",
+    "oft über 300, Rekord: 563 Jahre",
+    "80-90 Jahre",
+    ],
+    "Richtig":"80-90 Jahre"
+}
+{
+    "Frage":"Wie lange ist ihre Narbe nach Blütenöffnung empfängnisfähig?",
+    "Antworten":[
+    "36 Stunden",
+    "2 Wochen",
+    "48 Stunden",
+    "mehrere Tage, abhängig vom Baum",
+    ],
+    "Richtig":"36 Stunden"
+}
+{
+    "Frage":"Wie viele Süßkirschen werden jedes Jahr geerntet?",
+    "Antworten":[
+    "1.500.534 t",
+    "5.234.648 t",
+    "2.609.550 t",
+    "903.451 t",
+    ],
+    "Richtig":"2.609.550 t"
+}
+{
+    "Frage":"Vogelkirschen absondern in den ersten Wochen nach dem Blühen besonders viel Nektar, um Ameisen anzulocken, die Schädlinge fressen.?",
+    "Antworten":[
+    "Wahr",
+    "Falsch",
+    ],
+    "Richtig":"Wahr"
+}

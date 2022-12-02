@@ -1,0 +1,224 @@
+{
+    "Frage":"X?",
+    "Antworten":[
+    "F",
+    "F",
+    "W",
+    "F",
+    ],
+    "Richtig":"W"
+}
+
+{
+    "Frage":"In was lässt sich ein Ahornblatt unterteilen?",
+    "Antworten":[
+    "Lappen",
+    "Finger",
+    "Spitzen",
+    "Wischer"
+    ],
+    "Richtig":"Lappen"
+}
+
+{
+    "Frage":"Ist der Ahorn giftig?",
+    "Antworten":[
+    "Ja",
+    "Nur für Nagetiere",
+    "Nur für Pferde & Esel",
+    "Nein"
+    ],
+    "Richtig":"Nur für Pferde & Esel"
+}
+
+{
+    "Frage":"Wo ist der Ginkgo beheimatet? Dort ist er sogar Nationalbaum!",
+    "Antworten":[
+    "China",
+    "Thailand",
+    "Dänemark",
+    "Madagaskar"
+    ],
+    "Richtig":"China"
+}
+
+{
+    "Frage":"Bei was soll der Ginkgo laut traditioneller chinesischer Medizin helfen?",
+    "Antworten":[
+    "Rückenschmerzen",
+    "Gedächtnisprobleme",
+    "Haarausfall",
+    "Karies"
+    ],
+    "Richtig":"Gedächtnisprobleme"
+}
+
+{
+    "Frage":"Wieso werden in Parks fast nur männliche Ginkgos angebaut?",
+    "Antworten":[
+    "die Weibchen werden nur maximal 1m hoch",
+    "die Weibchen sind nicht frosthart",
+    "die Früchte der Weibchen stinken",
+    "die Früchte der Weibchen sind giftig"
+    ],
+    "Richtig":"die Früchte der Weibchen stinken"
+}
+
+{
+    "Frage":"Ist die Rosskastanie essbar?",
+    "Antworten":[
+    "Ja",
+    "Ja, jedoch ist sie ungenießbar",
+    "Nur im gekochten Zustand",
+    "Nein, sie ist giftig"
+    ],
+    "Richtig":"Nein, sie ist giftig"
+}
+
+{
+    "Frage":"Was kann man aus Kastanien herstellen?",
+    "Antworten":[
+    "Waschmittel",
+    "Hautcreme",
+    "Zahnpasta",
+    "Deodorant"
+    ],
+    "Richtig":"Waschmittel"
+}
+
+{
+    "Frage":"Sind Zieräpfel giftig?",
+    "Antworten":[
+    "Ja",
+    "Nein, jedoch ja für Haustiere",
+    "Nein"
+    ],
+    "Richtig":"Nein"
+}
+
+{
+    "Frage":"In welchem Jahrhundert wurde die älteste Apfelsorte, der Edelborsdorfer dokumentiert?",
+    "Antworten":[
+    "1. Jahrhundert",
+    "6. Jahrhundert",
+    "12. Jahrhundert",
+    "18. Jahrhundert"
+    ],
+    "Richtig":"12. Jahrhundert"
+}
+
+{
+    "Frage":"Welchen Nahrungsmitteln schauen die Samen/Früchte der Robinie ähnlich?",
+    "Antworten":[
+    "Walnüsse",
+    "Bohnenhülsen",
+    "Kirschen",
+    "Äpfeln"
+    ],
+    "Richtig":"Bohnenhülsen"
+}
+
+{
+    "Frage":"Die Pflanzung der Robinie ist umstritten. Wieso?",
+    "Antworten":[
+    "Sie ist sehr schädlingsanfällig",
+    "Sie bietet kaum Nahrung für Insekten",
+    "Sie braucht extremst viel Dünger, um überhaupt zu wachsen",
+    "Sie breitet sich aus & senkt die Artenvielfalt (=>invasiv)"
+    ],
+    "Richtig":"Sie breitet sich aus & senkt die Artenvielfalt (=>invasiv)"
+}
+
+{
+    "Frage":"Wie andere Hülsenfrüchtler lebt die Robinie in Symbiose mit Knöllchenbakterien. Wieso?",
+    "Antworten":[
+    "um Feinde abzuwehren",
+    "um witterungsbeständiger zu sein",
+    "um sich selbst zu Düngen",
+    "um Insekten anzulocken"
+    ],
+    "Richtig":"um sich selbst zu Düngen"
+}
+
+{
+    "Frage":"Was wurde aus den Früchten der Eberesche hergestellt?",
+    "Antworten":[
+    "Süßstoff",
+    "Gift gegen Schädlinge",
+    "Farbe",
+    "Duftstoffe"
+    ],
+    "Richtig":"Süßstoff"
+}
+
+{
+    "Frage":"Woher kommen die Namen Vogelbeere bzw. Eberesche? (2 Anworten)",
+    "Antworten":[
+    "Sie ist verwandt mit der Esche",
+    "Die Blätter ähneln denen der Esche",
+    "Vögel lieben die Früchte",
+    "Die Beeren sind höchst giftig für Vögel"
+    ],
+    "Richtig":[
+    "Die Blätter ähneln denen der Esche",
+    "Vögel lieben die Früchte"
+    ]
+}
+
+{
+    "Frage":"Sind Vogelbeeren giftig?",
+    "Antworten":[
+    "Ja, jedoch sind sie sicher für Haustiere",
+    "Nein, jedoch ja für Haustiere"
+    ],
+    "Richtig":"Nein, jedoch ja für Haustiere"
+}
+
+{
+    "Frage":"Die Linde ist für Insekten sehr wichtig. Wieso?",
+    "Antworten":[
+    "sie ist ein Sommerblüher, was sehr selten ist",
+    "sie hat 10-mal so viele Blüten wie die meisten anderen Laubbäume",
+    "sie zieht viele seltene Arten an"
+    ],
+    "Richtig":"sie ist ein Sommerblüher, was sehr selten ist"
+}
+
+{
+    "Frage":"Wobei hilft Lindenblütentee?",
+    "Antworten":[
+    "Bauchschmerzen",
+    "Erkältung",
+    "Hustenreiz",
+    "Konzentrationsschwächen"
+    ],
+    "Richtig":"Erkältung"
+}
+
+{
+    "Frage":"Die Dorflinde, welche früher das Zentrum eines Dorfs darstellte, hatte auch folgende Namen:",
+    "Antworten":[
+    "Festbaum",
+    "Gerichtslinde",
+    "Hochzeitslinde",
+    "Tanzlinde"
+    ],
+    "Richtig":[
+    "Gerichtslinde",
+    "Tanzlinde"
+    ]
+}
+
+{
+    "Frage":"Was wurde früher in Notzeiten aus Eicheln hergestellt?",
+    "Antworten":[
+    "Seife",
+    "Öl",
+    "Kaffee",
+    "Mehl"
+    ],
+    "Richtig":[
+    "Kaffee",
+    "Mehl"
+    ]
+}
