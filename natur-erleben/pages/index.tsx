@@ -96,6 +96,17 @@ const Home: NextPage = () => {
             placeholder="Spielername"
             error={invalidPlayerName}
           />
+          <SpinnerButton
+            fullWidth
+            job={onCreateGameClick}
+            disabled={
+              step == "create"
+                ? playerName == ""
+                : playerName == "" || gameId == ""
+            }
+          >
+            Weiter
+          </SpinnerButton>
         </RenderIf>
         <RenderIf condition={step === "create"}>
           <Input
@@ -104,7 +115,9 @@ const Home: NextPage = () => {
             error={invalidPlayerName}
           />
           <div className={styles.gradeContainer}>
-            <p>Du hast Klasse {sixthGrade ? "6" : "8"} ausgewählt</p>
+            <p className={styles.gradeText}>
+              Du hast Klasse {sixthGrade ? "6" : "8"} ausgewählt
+            </p>
             <Button onClick={() => setSixthGrade(!sixthGrade)}>
               Klasse wechseln
             </Button>
