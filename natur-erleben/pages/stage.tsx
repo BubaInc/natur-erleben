@@ -14,7 +14,7 @@ import {
   useSync,
 } from "../util/Firebase";
 import { getItem, setItem } from "../util/StorageHandler";
-import { Question, stages } from "../util/Stages";
+import { Question, stages6, stages8 } from "../util/Stages";
 import styles from "../styles/Stage.module.css";
 import Slidey from "../components/Slidey";
 import { useSlidey } from "../components/Slidey/Slidey";

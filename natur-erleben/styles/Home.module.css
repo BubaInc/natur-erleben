@@ -5,13 +5,13 @@
 }
 
 .title {
-  background-color: #5FB7E9;
+  background-color: #5fb7e9;
   font-style: normal;
   font-weight: 400;
   font-size: 40px;
   line-height: 48px;
   text-align: center;
-  color: #FFFFFF;
+  color: #ffffff;
   padding: 10px 30px;
   border-radius: 50px;
   margin-top: 70px;
@@ -19,4 +19,9 @@
 
 .menuButton {
   width: fit-content;
+}
+
+.gradeContainer {
+  display: flex;
+  gap: 5px;
 }

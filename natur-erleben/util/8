@@ -1,15 +1,4 @@
 {
-    "Frage":"X?",
-    "Antworten":[
-    "F",
-    "F",
-    "W",
-    "F",
-    ],
-    "Richtig":"W"
-}
-
-{
     "Frage":"In was lässt sich ein Ahornblatt unterteilen?",
     "Antworten":[
     "Lappen",

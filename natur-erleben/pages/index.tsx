@@ -31,6 +31,8 @@ const Home: NextPage = () => {
   type Step = "start" | "create" | "join";
   const [step, setStep] = useState<Step>("start");
 
+  const [sixthGrade, setSixthGrade] = useState(false);
+
   // Gets called whenever the user clicks the "continue" button
   const onCreateGameClick = async () => {
     if (step == "create") {
@@ -86,13 +88,26 @@ const Home: NextPage = () => {
             placeholder="Spiel ID"
             error={invalidGameId}
           />
-        </RenderIf>
-        <RenderIf condition={step === "create" || step === "join"}>
           <Input
             setState={setPlayerName}
             placeholder="Spielername"
             error={invalidPlayerName}
           />
+        </RenderIf>
+        <RenderIf condition={step === "create"}>
+          <Input
+            setState={setPlayerName}
+            placeholder="Spielername"
+            error={invalidPlayerName}
+          />
+          <div className={styles.gradeContainer}>
+            <Button disabled={!sixthGrade} onClick={() => setSixthGrade(true)}>
+              6. Klasse
+            </Button>
+            <Button disabled={sixthGrade} onClick={() => setSixthGrade(false)}>
+              8. Klasse
+            </Button>
+          </div>
           <SpinnerButton
             fullWidth
             job={onCreateGameClick}
