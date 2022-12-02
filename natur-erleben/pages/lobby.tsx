@@ -46,6 +46,10 @@ export default function Lobby() {
             return <PlayerCard playerName={player} key={i} />;
           })}
         </div>
+        <p className={styles.hint}>
+          Hinweis: Geht zur ersten Station (Zierapfel) bevor ihr das Spiel
+          startet!
+        </p>
         <RenderIf condition={gameData.host == myName}>
           <SpinnerButton
             disabled={players.length <= 1}
