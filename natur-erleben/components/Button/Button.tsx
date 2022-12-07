@@ -9,6 +9,7 @@ export default function Button({
   onlyDisabledColoring,
   disabledWithoutColoring,
   small,
+  fitContent,
 }: {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   className?: string;
@@ -18,6 +19,7 @@ export default function Button({
   onlyDisabledColoring?: boolean;
   disabledWithoutColoring?: boolean;
   small?: boolean;
+  fitContent?: boolean;
 }) {
   const isDisabled = () => {
     if (disabled == undefined && disabledWithoutColoring == undefined)
@@ -49,6 +51,7 @@ export default function Button({
           line-height: 24px;
           text-align: center;
           color: ${disabled || onlyDisabledColoring ? "#C2C2C2" : "#FFFFFF"};
+          ${fitContent ? "width: fit-content;" : ""}
 
           background: ${calculatedBackground};
           border-radius: ${small ? "40px" : "50px"};

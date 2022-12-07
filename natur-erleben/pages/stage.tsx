@@ -115,8 +115,15 @@ export default function Stage() {
                     width="143"
                     height="100"
                   />
-                ) : (
+                ) : typeof question.correct == typeof "" ? (
                   question.correct
+                ) : (
+                  (question.correct as string[]).flatMap(
+                    (value: any, index: number, array: any[]) =>
+                      array.length - 1 !== index // check for the last item
+                        ? [value, " oder "]
+                        : value
+                  )
                 )}
               </p>
             </RenderIf>
@@ -150,6 +157,7 @@ export default function Stage() {
               <div className={styles.answers}>
                 {answers.map((answer, i) => (
                   <Button
+                    fitContent
                     key={i}
                     disabled={hasSeenQuestion}
                     disabledWithoutColoring={!canClickAnswerButtons}
