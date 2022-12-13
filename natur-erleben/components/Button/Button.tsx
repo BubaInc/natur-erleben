@@ -10,6 +10,7 @@ export default function Button({
   disabledWithoutColoring,
   small,
   fitContent,
+  mapButton,
 }: {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   className?: string;
@@ -20,6 +21,7 @@ export default function Button({
   disabledWithoutColoring?: boolean;
   small?: boolean;
   fitContent?: boolean;
+  mapButton?: boolean;
 }) {
   const isDisabled = () => {
     if (disabled == undefined && disabledWithoutColoring == undefined)
@@ -58,6 +60,7 @@ export default function Button({
           ${small ? "width: fit-content;" : ""}
           padding: ${small ? "3px 10px" : "10px 30px"};
           border: none;
+          ${mapButton ? "position: absolute; bottom: 10px; right: 10px" : ""}
         }
 
         .button:focus {
