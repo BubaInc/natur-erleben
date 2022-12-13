@@ -1,14 +1,20 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import MapButton from "../components/MapButton";
-import Image from "next/image";
+import Minimap from "../components/Minimap";
+import { useState } from "react";
+import RenderIf from "../components/RenderIf";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const [visible, setVisible] = useState(false);
+
   return (
     <>
       <Component {...pageProps} />
-      <MapButton />
-      <Image src="" width={500} height={500}></Image>
+      <MapButton onClick={() => setVisible(true)} />
+      <RenderIf condition={visible}>
+        <Minimap setVisible={setVisible} />
+      </RenderIf>
     </>
   );
 }
